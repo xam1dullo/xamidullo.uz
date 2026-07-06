@@ -764,35 +764,136 @@
       }
 
       .proof-strip {
+        position: relative;
+        isolation: isolate;
         display: grid;
-        grid-template-columns: 1.15fr repeat(3, 1fr);
+        grid-template-columns: minmax(240px, 0.78fr) minmax(0, 1.72fr);
+        gap: clamp(1.5rem, 4vw, 3rem);
+        overflow: hidden;
         margin-top: clamp(3rem, 6vw, 5rem);
-        border-top: 1px solid var(--line-strong);
+        padding: clamp(1.25rem, 3vw, 2rem);
+        border-radius: var(--radius-xl);
+        background:
+          radial-gradient(
+            circle at 8% 0%,
+            color-mix(in srgb, var(--bronze) 14%, transparent),
+            transparent 23rem
+          ),
+          radial-gradient(
+            circle at 100% 100%,
+            color-mix(in srgb, var(--emerald) 16%, transparent),
+            transparent 25rem
+          ),
+          var(--surface-2);
+        box-shadow: var(--shadow-inset), var(--shadow-2);
       }
-      .proof-intro,
-      .proof-item {
-        padding: 1.25rem 1rem 0;
+      .proof-strip::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0.4;
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: linear-gradient(115deg, #000, transparent 58%);
       }
       .proof-intro {
-        padding-left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 0.45rem 0.25rem 0.35rem;
+      }
+      .proof-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        color: var(--bronze-soft);
+        font: 750 0.7rem/1 var(--mono);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .proof-kicker::before {
+        content: "";
+        width: 1.4rem;
+        height: 1px;
+        background: currentColor;
+      }
+      .proof-title {
+        max-width: 390px;
+        margin: 1.4rem 0 0;
+        font-size: clamp(1.9rem, 3.4vw, 3.25rem);
+        line-height: 0.98;
+        letter-spacing: -0.055em;
+        text-wrap: balance;
+      }
+      .proof-copy {
+        max-width: 380px;
+        margin: 1.2rem 0 0;
         color: var(--muted);
-        font-size: 0.84rem;
+        font-size: 0.88rem;
+        line-height: 1.55;
+        text-wrap: pretty;
       }
-      .proof-item + .proof-item {
-        border-left: 1px solid var(--line);
+      .proof-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
       }
-      .proof-item strong {
+      .proof-item {
+        min-width: 0;
+        min-height: 240px;
+        display: flex;
+        flex-direction: column;
+        padding: 1.15rem;
+        border-radius: var(--radius-lg);
+        background: color-mix(in srgb, var(--surface) 88%, transparent);
+        box-shadow:
+          inset 0 0 0 1px var(--line),
+          0 12px 30px rgba(0, 0, 0, 0.12),
+          var(--shadow-inset);
+        transition:
+          transform 0.22s var(--ease-out),
+          box-shadow 0.22s ease,
+          background 0.22s ease;
+      }
+      .proof-item:hover {
+        transform: translateY(-4px);
+        background: color-mix(in srgb, var(--surface-2) 94%, transparent);
+        box-shadow:
+          inset 0 0 0 1px var(--line-strong),
+          0 18px 40px rgba(0, 0, 0, 0.16),
+          var(--shadow-inset);
+      }
+      .proof-item-index {
+        color: var(--bronze-soft);
+        font: 750 0.68rem/1 var(--mono);
+        letter-spacing: 0.08em;
+      }
+      .proof-value {
         display: block;
-        font-size: clamp(1.45rem, 3vw, 2.2rem);
-        line-height: 1;
-        letter-spacing: -0.045em;
+        margin-top: auto;
+        font-size: clamp(2.3rem, 4.2vw, 4rem);
+        line-height: 0.88;
+        letter-spacing: -0.075em;
         font-variant-numeric: tabular-nums;
       }
-      .proof-item span {
-        display: block;
-        margin-top: 0.4rem;
+      .proof-label {
+        margin: 0.85rem 0 0;
+        color: var(--text-soft);
+        font-size: 0.88rem;
+        font-weight: 750;
+        line-height: 1.3;
+      }
+      .proof-detail {
+        margin: 0.45rem 0 0;
         color: var(--faint);
-        font-size: 0.78rem;
+        font-size: 0.72rem;
+        line-height: 1.45;
+        text-wrap: pretty;
       }
 
       .about-grid {
@@ -1558,6 +1659,18 @@
           flex-direction: row;
           flex-wrap: wrap;
         }
+        .proof-strip {
+          grid-template-columns: 1fr;
+        }
+        .proof-intro {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr);
+          gap: 1.5rem;
+          align-items: end;
+        }
+        .proof-copy {
+          margin-top: 0;
+        }
       }
 
       @media (max-width: 820px) {
@@ -1612,16 +1725,6 @@
         .project:nth-child(3) {
           min-height: 330px;
         }
-        .proof-strip {
-          grid-template-columns: repeat(3, 1fr);
-        }
-        .proof-intro {
-          grid-column: 1 / -1;
-          padding-bottom: 0.25rem;
-        }
-        .proof-item:first-of-type {
-          border-left: 0;
-        }
       }
 
       @media (max-width: 640px) {
@@ -1663,13 +1766,23 @@
           top: 10%;
         }
         .proof-strip {
+          gap: 1.5rem;
+          padding: 1rem;
+          border-radius: var(--radius-lg);
+        }
+        .proof-intro {
+          display: flex;
+          padding: 0.35rem 0.2rem 0;
+        }
+        .proof-copy {
+          margin-top: 1rem;
+        }
+        .proof-metrics {
           grid-template-columns: 1fr;
-          gap: 0;
         }
         .proof-item {
-          padding: 1rem 0;
-          border-left: 0 !important;
-          border-top: 1px solid var(--line);
+          min-height: 200px;
+          padding: 1.15rem;
         }
         .belief-card {
           min-height: 360px;
@@ -1717,6 +1830,7 @@
           display: none;
         }
         .project:hover,
+        .proof-item:hover,
         .writing-card:hover,
         .btn:hover,
         .icon-btn:hover {
@@ -1926,22 +2040,62 @@
             </div>
           </div>
 
-          <div
+          <section
             class="proof-strip"
-            aria-label="Asosiy professional natijalar"
+            aria-labelledby="proof-title"
+            data-proof
             data-reveal
           >
-            <div class="proof-intro">Natija bilan isbotlangan muhandislik</div>
-            <div class="proof-item">
-              <strong>4+ yil</strong><span>professional tajriba</span>
+            <div class="proof-intro">
+              <div>
+                <span class="proof-kicker">Muhandislik · raqamlarda</span>
+                <h2 class="proof-title" id="proof-title">
+                  Natija bilan isbotlangan muhandislik.
+                </h2>
+              </div>
+              <p class="proof-copy">
+                Har bir texnik qaror tezlik, barqarorlik va biznes qiymati bilan
+                o‘lchanadi — shunchaki yozilgan kod bilan emas.
+              </p>
             </div>
-            <div class="proof-item">
-              <strong>3×</strong><span>servis javob tezligi</span>
+            <div class="proof-metrics" aria-label="Professional natijalar">
+              <article class="proof-item">
+                <span class="proof-item-index" aria-hidden="true">01</span>
+                <strong
+                  class="proof-value"
+                  aria-label="4 yildan ortiq professional tajriba"
+                  ><span data-proof-number="4">4</span><span aria-hidden="true"
+                    >+ yil</span
+                  ></strong
+                >
+                <p class="proof-label">Production tajribasi</p>
+                <p class="proof-detail">Backend · full-stack · DevOps</p>
+              </article>
+              <article class="proof-item">
+                <span class="proof-item-index" aria-hidden="true">02</span>
+                <strong
+                  class="proof-value"
+                  aria-label="Servis javob tezligi 3 baravar oshirilgan"
+                  ><span data-proof-number="3">3</span><span aria-hidden="true"
+                    >×</span
+                  ></strong
+                >
+                <p class="proof-label">Tezroq servis javobi</p>
+                <p class="proof-detail">Bottleneck audit · query tuning</p>
+              </article>
+              <article class="proof-item">
+                <span class="proof-item-index" aria-hidden="true">03</span>
+                <strong
+                  class="proof-value"
+                  aria-label="Xotira sarfi 90 foizga optimallashtirilgan"
+                  ><span data-proof-number="90">90</span
+                  ><span aria-hidden="true">%</span></strong
+                >
+                <p class="proof-label">Kamroq xotira sarfi</p>
+                <p class="proof-detail">Streaming · runtime optimizatsiya</p>
+              </article>
             </div>
-            <div class="proof-item">
-              <strong>90%</strong><span>xotira optimizatsiyasi</span>
-            </div>
-          </div>
+          </section>
         </div>
       </section>
 
@@ -2912,8 +3066,12 @@
             gsap.registerPlugin(ScrollTrigger);
             media = gsap.matchMedia();
             media.add("(prefers-reduced-motion: no-preference)", () => {
-              const heroItems = gsap.utils.toArray(".hero [data-reveal]");
+              const proof = qs("[data-proof]");
+              const heroItems = gsap.utils
+                .toArray(".hero [data-reveal]")
+                .filter((item) => item !== proof);
               heroItems.forEach((item) => item.classList.add("is-revealed"));
+              proof?.classList.add("is-revealed");
               gsap
                 .timeline({ defaults: { duration: 0.56, ease: "power3.out" } })
                 .fromTo(
@@ -2966,16 +3124,99 @@
                   });
                 });
 
-              gsap.to(".portrait-shell", {
-                yPercent: -5,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: ".hero",
-                  start: "top top",
-                  end: "bottom top",
-                  scrub: 1,
-                },
-              });
+              let proofTimeline;
+              let proofTrigger;
+              let proofCounters = [];
+              if (proof) {
+                const introParts = qsa(
+                  ".proof-kicker, .proof-title, .proof-copy",
+                  proof,
+                );
+                const metricCards = qsa(".proof-item", proof);
+                const counters = qsa("[data-proof-number]", proof);
+                proofCounters = counters;
+                let proofAnimated = false;
+                const animateProof = () => {
+                  if (proofAnimated) return;
+                  proofAnimated = true;
+                  proofTimeline = gsap
+                    .timeline({ defaults: { ease: "power3.out" } })
+                    .fromTo(
+                      introParts,
+                      { y: 16, autoAlpha: 0 },
+                      {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.48,
+                        stagger: 0.065,
+                        clearProps: "transform,opacity,visibility",
+                      },
+                    )
+                    .fromTo(
+                      metricCards,
+                      { y: 22, scale: 0.985, autoAlpha: 0 },
+                      {
+                        y: 0,
+                        scale: 1,
+                        autoAlpha: 1,
+                        duration: 0.54,
+                        stagger: 0.075,
+                        clearProps: "transform,opacity,visibility",
+                      },
+                      0.12,
+                    );
+
+                  counters.forEach((counter) => {
+                    proofTimeline.fromTo(
+                      counter,
+                      { textContent: 0 },
+                      {
+                        textContent: Number(counter.dataset.proofNumber),
+                        duration: 0.85,
+                        snap: { textContent: 1 },
+                        ease: "power2.out",
+                      },
+                      0.24,
+                    );
+                  });
+                };
+
+                if (
+                  proof.getBoundingClientRect().top <
+                  window.innerHeight * 0.86
+                ) {
+                  animateProof();
+                } else {
+                  proofTrigger = ScrollTrigger.create({
+                    trigger: proof,
+                    start: "top 86%",
+                    once: true,
+                    onEnter: animateProof,
+                  });
+                }
+              }
+
+              const portraitShell = qs(".portrait-shell");
+              if (portraitShell) {
+                gsap.to(portraitShell, {
+                  yPercent: -5,
+                  ease: "none",
+                  scrollTrigger: {
+                    trigger: ".hero",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: 1,
+                  },
+                });
+              }
+
+              return () => {
+                proofTimeline?.kill();
+                proofTrigger?.kill();
+                proofCounters.forEach((counter) => {
+                  counter.textContent = counter.dataset.proofNumber;
+                });
+              };
             });
           } catch (_) {
             window.clearTimeout(revealSafetyTimeout);
