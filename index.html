@@ -1516,13 +1516,13 @@
         color: var(--text);
       }
 
-      .js [data-reveal] {
+      .js.motion-ready [data-reveal] {
         opacity: 0;
         will-change: opacity, transform;
       }
-      .js [data-reveal].is-revealed,
-      .no-js [data-reveal] {
+      .js.motion-ready [data-reveal].is-revealed {
         opacity: 1;
+        will-change: auto;
       }
 
       @media (max-width: 980px) {
@@ -1739,7 +1739,7 @@
         body::after {
           display: none;
         }
-        .js [data-reveal] {
+        .js.motion-ready [data-reveal] {
           visibility: visible !important;
           opacity: 1 !important;
           transform: none !important;
@@ -2879,101 +2879,109 @@
           };
         }
 
-        function initMotion({ reduceMotion, finePointer }) {
+        function initMotion({ root, reduceMotion, finePointer }) {
           const revealItems = qsa("[data-reveal]");
-          revealItems.forEach((item) => {
+          const reveal = (item) => {
+            item.classList.add("is-revealed");
             item.style.visibility = "visible";
-          });
+            item.style.opacity = "1";
+            item.style.transform = "none";
+          };
+          const revealAll = () => {
+            root.classList.remove("motion-ready");
+            revealItems.forEach(reveal);
+          };
 
           if (!window.gsap || !window.ScrollTrigger || reduceMotion.matches) {
-            revealItems.forEach((item) => {
-              item.style.opacity = "1";
-              item.style.transform = "none";
-              item.classList.add("is-revealed");
-            });
+            revealAll();
             return () => {};
           }
 
-          gsap.registerPlugin(ScrollTrigger);
-          const media = gsap.matchMedia();
-          let revealSafetyTimeout;
-          media.add("(prefers-reduced-motion: no-preference)", () => {
-            const heroItems = gsap.utils.toArray(".hero [data-reveal]");
-            gsap
-              .timeline({ defaults: { duration: 0.72, ease: "power3.out" } })
-              .from(heroItems, {
-                y: 28,
-                autoAlpha: 0,
-                stagger: 0.075,
-                clearProps: "transform,opacity,visibility",
-              });
-
-            const rest = revealItems.filter((item) => !item.closest(".hero"));
-            gsap.set(rest, { y: 30, autoAlpha: 0 });
-            const revealBatch = (batch) =>
-              gsap.to(batch, {
-                y: 0,
-                autoAlpha: 1,
-                duration: 0.68,
-                stagger: 0.04,
-                ease: "power3.out",
-                overwrite: true,
-                onStart: () =>
-                  batch.forEach((item) => item.classList.add("is-revealed")),
-                clearProps: "transform,opacity,visibility",
-              });
-
-            ScrollTrigger.batch(rest, {
-              start: "top 92%",
-              interval: 0.06,
-              batchMax: 6,
-              onEnter: revealBatch,
-              onEnterBack: revealBatch,
+          root.classList.add("motion-ready");
+          let media;
+          const revealSafetyTimeout = window.setTimeout(() => {
+            revealItems.forEach((item) => {
+              const style = window.getComputedStyle(item);
+              const hidden =
+                style.visibility === "hidden" ||
+                Number.parseFloat(style.opacity) < 0.05;
+              if (hidden) reveal(item);
             });
+          }, 2000);
+          try {
+            gsap.registerPlugin(ScrollTrigger);
+            media = gsap.matchMedia();
+            media.add("(prefers-reduced-motion: no-preference)", () => {
+              const heroItems = gsap.utils.toArray(".hero [data-reveal]");
+              heroItems.forEach((item) => item.classList.add("is-revealed"));
+              gsap
+                .timeline({ defaults: { duration: 0.56, ease: "power3.out" } })
+                .fromTo(
+                  heroItems,
+                  { y: 24, autoAlpha: 0 },
+                  {
+                    y: 0,
+                    autoAlpha: 1,
+                    stagger: 0.055,
+                    clearProps: "transform,opacity,visibility",
+                  },
+                );
 
-            revealSafetyTimeout = window.setTimeout(() => {
-              rest.forEach((item) => {
-                const style = window.getComputedStyle(item);
-                const hidden =
-                  style.visibility === "hidden" ||
-                  Number.parseFloat(style.opacity) < 0.05;
-                if (!hidden) return;
-                item.classList.add("is-revealed");
-                gsap.set(item, {
+              const rest = revealItems.filter(
+                (item) => !item.closest(".hero"),
+              );
+              gsap.set(rest, { y: 24, autoAlpha: 0 });
+              const revealBatch = (batch) => {
+                batch.forEach((item) => item.classList.add("is-revealed"));
+                gsap.to(batch, {
                   y: 0,
                   autoAlpha: 1,
+                  duration: 0.5,
+                  stagger: 0.035,
+                  ease: "power3.out",
+                  overwrite: true,
                   clearProps: "transform,opacity,visibility",
                 });
-              });
-            }, 2500);
+              };
 
-            // Browser scroll restoration or direct hash navigation can place items
-            // above the trigger line before ScrollTrigger's first update.
-            rest
-              .filter(
-                (item) =>
-                  item.getBoundingClientRect().top < window.innerHeight * 0.92,
-              )
-              .forEach((item) => {
-                item.classList.add("is-revealed");
-                gsap.set(item, {
-                  y: 0,
-                  autoAlpha: 1,
-                  clearProps: "transform,opacity,visibility",
+              ScrollTrigger.batch(rest, {
+                start: "top 92%",
+                interval: 0.06,
+                batchMax: 6,
+                once: true,
+                onEnter: revealBatch,
+              });
+
+              // Browser scroll restoration or direct hash navigation can place
+              // items above the trigger line before ScrollTrigger's first update.
+              rest
+                .filter(
+                  (item) =>
+                    item.getBoundingClientRect().top < window.innerHeight * 0.92,
+                )
+                .forEach((item) => {
+                  reveal(item);
+                  gsap.set(item, {
+                    clearProps: "transform,opacity,visibility",
+                  });
                 });
-              });
 
-            gsap.to(".portrait-shell", {
-              yPercent: -5,
-              ease: "none",
-              scrollTrigger: {
-                trigger: ".hero",
-                start: "top top",
-                end: "bottom top",
-                scrub: 1,
-              },
+              gsap.to(".portrait-shell", {
+                yPercent: -5,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: ".hero",
+                  start: "top top",
+                  end: "bottom top",
+                  scrub: 1,
+                },
+              });
             });
-          });
+          } catch (_) {
+            window.clearTimeout(revealSafetyTimeout);
+            revealAll();
+            return () => {};
+          }
 
           const tilt = qs("[data-tilt]");
           let onTiltMove;
@@ -3005,10 +3013,9 @@
           }
 
           return () => {
-            if (revealSafetyTimeout) {
-              window.clearTimeout(revealSafetyTimeout);
-            }
-            media.revert();
+            window.clearTimeout(revealSafetyTimeout);
+            media?.revert();
+            root.classList.remove("motion-ready");
             if (tilt && onTiltMove && onTiltLeave) {
               tilt.removeEventListener("pointermove", onTiltMove);
               tilt.removeEventListener("pointerleave", onTiltLeave);
@@ -3064,7 +3071,7 @@
             progress ? createScrollController({ nav, progress }) : null,
             initSectionObserver(qsa(".nav-links a")),
             initPointerEffects({ finePointer, reduceMotion }),
-            initMotion({ reduceMotion, finePointer }),
+            initMotion({ root, reduceMotion, finePointer }),
           ];
 
           const refreshScrollTriggers = () => window.ScrollTrigger?.refresh();
