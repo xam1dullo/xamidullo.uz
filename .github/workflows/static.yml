@@ -26,18 +26,38 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment_first.outputs.page_url || steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Prepare Pages artifact
+        run: |
+          set -eu
+          mkdir -p _site
+          cp index.html _site/
+          cp CNAME _site/
+          [ -f robots.txt ] && cp robots.txt _site/
+          [ -f sitemap.xml ] && cp sitemap.xml _site/
+          [ -f favicon.svg ] && cp favicon.svg _site/
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: '.'
-      - name: Deploy to GitHub Pages
+          # Upload only publishable static files
+          path: "_site"
+
+      - name: Deploy to GitHub Pages (first attempt)
+        id: deployment_first
+        continue-on-error: true
+        uses: actions/deploy-pages@v5
+
+      - name: Deploy to GitHub Pages (retry)
+        if: steps.deployment_first.outcome != 'success'
         id: deployment
         uses: actions/deploy-pages@v5
