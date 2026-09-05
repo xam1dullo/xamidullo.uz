@@ -33,15 +33,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare Pages artifact
-        run: |
-          set -eu
-          mkdir -p _site
-          cp index.html _site/
-          cp CNAME _site/
-          [ -f robots.txt ] && cp robots.txt _site/
-          [ -f sitemap.xml ] && cp sitemap.xml _site/
-          [ -f favicon.svg ] && cp favicon.svg _site/
+      - name: Setup pnpm and Node
+        uses: pnpm/setup@v1
+        with:
+          runtime: node@22
+          cache: true
+          install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Astro site
+        run: pnpm build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -49,8 +52,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload only publishable static files
-          path: "_site"
+          path: dist
 
       - name: Deploy to GitHub Pages (first attempt)
         id: deployment_first
