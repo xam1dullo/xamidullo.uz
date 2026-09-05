@@ -29,10 +29,10 @@ const projects = [
 ];
 
 const capabilities = [
-  ["01", "Backend", "Node.js, NestJS, Deno va Go bilan ilova hamda servislar."],
-  ["02", "Data", "PostgreSQL, MongoDB, Oracle SQL va Redis bilan tezkor ma’lumot oqimlari."],
-  ["03", "Infra", "Docker, Nginx, Linux, CI/CD va AWS bilan production tizimlari."],
-  ["04", "Quality", "Testing, monitoring, clean code, architecture va mentorlik."],
+  { number: "01", title: "Backend", detail: "Node.js, NestJS, Deno va Go bilan ilova hamda servislar." },
+  { number: "02", title: "Data", detail: "PostgreSQL, MongoDB, Oracle SQL va Redis bilan tezkor ma’lumot oqimlari." },
+  { number: "03", title: "Infra", detail: "Docker, Nginx, Linux, CI/CD va AWS bilan production tizimlari." },
+  { number: "04", title: "Quality", detail: "Testing, monitoring, clean code, architecture va mentorlik." },
 ];
 
 const experience = [
@@ -67,9 +67,9 @@ const experience = [
 ];
 
 const metrics = [
-  ["4+", "yil", "Production tajribasi", "Backend · full-stack · DevOps"],
-  ["3×", "", "Tezroq servis javobi", "Bottleneck audit · query tuning"],
-  ["90%", "", "Kamroq xotira sarfi", "Streaming · runtime optimizatsiyasi"],
+  { value: "4+", suffix: "yil", label: "Production tajribasi", detail: "Backend · full-stack · DevOps" },
+  { value: "3×", suffix: "", label: "Tezroq servis javobi", detail: "Bottleneck audit · query tuning" },
+  { value: "90%", suffix: "", label: "Kamroq xotira sarfi", detail: "Streaming · runtime optimizatsiyasi" },
 ];
 
 const personSchema = {
@@ -171,7 +171,7 @@ const personSchema = {
             <h2 id="metrics-title">Muhandislik, raqamlarda.</h2>
           </div>
           <dl class="metrics-list">
-            {metrics.map(([value, suffix, label, detail]) => (
+            {metrics.map(({ value, suffix, label, detail }) => (
               <div class="metric">
                 <dt>{label}</dt>
                 <dd><strong>{value}</strong>{suffix && <span>{suffix}</span>}</dd>
@@ -191,9 +191,9 @@ const personSchema = {
           <p>Texnologiyani trend uchun emas, muammo, jamoa va uzoq muddatli qo‘llab-quvvatlash uchun tanlayman.</p>
         </div>
         <div class="capability-list">
-          {capabilities.map(([index, title, detail]) => (
+          {capabilities.map(({ number, title, detail }) => (
             <article class="capability">
-              <span>{index}</span>
+              <span>{number}</span>
               <h3>{title}</h3>
               <p>{detail}</p>
             </article>
