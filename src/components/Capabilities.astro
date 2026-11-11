@@ -1,6 +1,20 @@
 ---
+import {
+  CheckmarkBadge01Icon,
+  Database02Icon,
+  ServerStack01Icon,
+  SourceCodeSquareIcon,
+} from "@hugeicons/core-free-icons";
 import { defaultContent } from "../data/portfolio";
+import HugeIcon from "./HugeIcon.astro";
+
 const { capabilities, rangeHeading } = defaultContent;
+const capIcons = [
+  { icon: SourceCodeSquareIcon, anim: "terminal" as const },
+  { icon: Database02Icon, anim: "layers" as const },
+  { icon: ServerStack01Icon, anim: "layers" as const },
+  { icon: CheckmarkBadge01Icon, anim: "spark" as const },
+];
 ---
 
 <section class="operating-range shell reveal-on-scroll" aria-labelledby="range-title">
@@ -12,24 +26,50 @@ const { capabilities, rangeHeading } = defaultContent;
     <p data-i18n="rangeHeading.summary">{rangeHeading.summary}</p>
   </div>
   <div class="capability-list">
-    {capabilities.map(({ number, title, detail, tags }) => (
-      <article class="capability">
-        <span>{number}</span>
-        <h3>{title}</h3>
-        <p>{detail}</p>
-        {tags && (
-          <ul class="capability-tags" aria-label={`${title} ko'nikmalari`}>
-            {tags.map((tag) => (
-              <li>{tag}</li>
-            ))}
-          </ul>
-        )}
-      </article>
-    ))}
+    {capabilities.map(({ number, title, detail, tags }, idx) => {
+      const iconMeta = capIcons[idx] ?? capIcons[0];
+      return (
+        <article class="capability">
+          <div class="cap-top-bar">
+            <span>{number}</span>
+            <div class="cap-icon-box" aria-hidden="true">
+              <HugeIcon icon={iconMeta.icon} size={17} anim={iconMeta.anim} />
+            </div>
+          </div>
+          <h3>{title}</h3>
+          <p>{detail}</p>
+          {tags && (
+            <ul class="capability-tags" aria-label={`${title} ko'nikmalari`}>
+              {tags.map((tag) => (
+                <li>{tag}</li>
+              ))}
+            </ul>
+          )}
+        </article>
+      );
+    })}
   </div>
 </section>
 
 <style>
+  .cap-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .cap-icon-box {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 2.1rem;
+    block-size: 2.1rem;
+    border-radius: 0.55rem;
+    border: 1px solid var(--line-bright);
+    background: rgb(var(--canvas-rgb) / 0.55);
+    color: var(--signal-hover);
+  }
+
   .capability-tags {
     display: flex;
     flex-wrap: wrap;

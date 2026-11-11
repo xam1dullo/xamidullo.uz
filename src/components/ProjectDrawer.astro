@@ -1,5 +1,16 @@
 ---
+import {
+  AlertCircleIcon,
+  Analytics01Icon,
+  ArrowUpRight01Icon,
+  Cancel01Icon,
+  CheckmarkCircle02Icon,
+  CpuSettingsIcon,
+  HierarchySquare01Icon,
+} from "@hugeicons/core-free-icons";
 import { defaultContent } from "../data/portfolio";
+import HugeIcon from "./HugeIcon.astro";
+
 const { projects, drawer } = defaultContent;
 ---
 
@@ -11,33 +22,48 @@ const { projects, drawer } = defaultContent;
         <h2 id="drawer-title">Loyiha Arxitekturasi</h2>
       </div>
       <button type="button" class="drawer-close" id="drawer-close-btn" aria-label="Yopish">
-        ✕
+        <HugeIcon icon={Cancel01Icon} size={18} anim="spin" />
       </button>
     </div>
 
     <div class="drawer-body">
       <div class="drawer-section">
-        <h3 data-i18n="drawer.problem">{drawer.problem}</h3>
+        <div class="drawer-sec-head">
+          <HugeIcon icon={AlertCircleIcon} size={15} anim="spark" />
+          <h3 data-i18n="drawer.problem">{drawer.problem}</h3>
+        </div>
         <p id="drawer-problem"></p>
       </div>
 
       <div class="drawer-section">
-        <h3 data-i18n="drawer.solution">{drawer.solution}</h3>
+        <div class="drawer-sec-head">
+          <HugeIcon icon={CpuSettingsIcon} size={15} anim="spin" />
+          <h3 data-i18n="drawer.solution">{drawer.solution}</h3>
+        </div>
         <p id="drawer-solution"></p>
       </div>
 
       <div class="drawer-section">
-        <h3 data-i18n="drawer.highlights">{drawer.highlights}</h3>
+        <div class="drawer-sec-head">
+          <HugeIcon icon={CheckmarkCircle02Icon} size={15} anim="spark" />
+          <h3 data-i18n="drawer.highlights">{drawer.highlights}</h3>
+        </div>
         <ul id="drawer-highlights" class="drawer-highlights"></ul>
       </div>
 
       <div class="drawer-section">
-        <h3 data-i18n="drawer.metrics">{drawer.metrics}</h3>
+        <div class="drawer-sec-head">
+          <HugeIcon icon={Analytics01Icon} size={15} anim="pulse" />
+          <h3 data-i18n="drawer.metrics">{drawer.metrics}</h3>
+        </div>
         <div id="drawer-metrics" class="drawer-metrics-grid"></div>
       </div>
 
       <div class="drawer-section">
-        <h3 data-i18n="drawer.topology">{drawer.topology}</h3>
+        <div class="drawer-sec-head">
+          <HugeIcon icon={HierarchySquare01Icon} size={15} anim="layers" />
+          <h3 data-i18n="drawer.topology">{drawer.topology}</h3>
+        </div>
         <div id="drawer-diagram" class="drawer-diagram-nodes"></div>
       </div>
     </div>
@@ -45,7 +71,7 @@ const { projects, drawer } = defaultContent;
     <div class="drawer-footer">
       <a id="drawer-live-link" href="#" target="_blank" rel="noopener noreferrer" class="button button-primary">
         <span data-i18n="drawer.liveBtn">{drawer.liveBtn}</span>
-        <span aria-hidden="true">↗</span>
+        <HugeIcon icon={ArrowUpRight01Icon} size={16} anim="arrow-up-right" />
       </a>
     </div>
   </div>
@@ -225,8 +251,16 @@ const { projects, drawer } = defaultContent;
     padding-block: 1.75rem;
   }
 
+  .drawer-sec-head {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-block-end: 0.5rem;
+    color: var(--signal-dim);
+  }
+
   .drawer-section h3 {
-    margin: 0 0 0.5rem;
+    margin: 0;
     font-family: var(--mono);
     font-size: 0.72rem;
     letter-spacing: 0.06em;

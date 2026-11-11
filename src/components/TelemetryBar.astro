@@ -1,5 +1,14 @@
 ---
+import {
+  Activity01Icon,
+  CheckmarkBadge01Icon,
+  Clock01Icon,
+  CpuIcon,
+  Layers01Icon,
+} from "@hugeicons/core-free-icons";
 import { defaultContent } from "../data/portfolio";
+import HugeIcon from "./HugeIcon.astro";
+
 const { telemetry } = defaultContent;
 ---
 
@@ -7,26 +16,31 @@ const { telemetry } = defaultContent;
   <div class="telemetry-inner">
     <div class="telemetry-item tele-status">
       <span class="tele-dot" aria-hidden="true"></span>
+      <HugeIcon icon={Activity01Icon} size={14} anim="pulse" />
       <span class="tele-label" data-i18n="telemetry.status">{telemetry.status}</span>
     </div>
 
     <div class="telemetry-item">
+      <HugeIcon icon={Clock01Icon} size={14} anim="spin" class="tele-icon" />
       <span class="tele-key">LOC:</span>
       <span class="tele-val" data-i18n="telemetry.uptime">{telemetry.uptime}</span>
       <time class="tele-clock" id="tashkent-clock" aria-label="Toshkent vaqti">--:--:--</time>
     </div>
 
     <div class="telemetry-item">
+      <HugeIcon icon={CpuIcon} size={14} anim="spark" class="tele-icon" />
       <span class="tele-key">STACK:</span>
       <span class="tele-val" data-i18n="telemetry.latency">{telemetry.latency}</span>
     </div>
 
     <div class="telemetry-item">
+      <HugeIcon icon={Layers01Icon} size={14} anim="layers" class="tele-icon" />
       <span class="tele-key">ENGINE:</span>
       <span class="tele-val" data-i18n="telemetry.build">{telemetry.build}</span>
     </div>
 
     <div class="telemetry-item">
+      <HugeIcon icon={CheckmarkBadge01Icon} size={14} anim="spark" class="tele-icon" />
       <span class="tele-key">RELEASE:</span>
       <span class="tele-val" data-i18n="telemetry.version">{telemetry.version}</span>
     </div>
@@ -82,6 +96,10 @@ const { telemetry } = defaultContent;
 
   .tele-status {
     color: var(--signal);
+  }
+
+  .tele-icon {
+    color: var(--signal-dim);
   }
 
   .tele-dot {

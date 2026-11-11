@@ -1,7 +1,15 @@
 ---
+import {
+  ArrowLeft01Icon,
+  ArrowRight01Icon,
+  Calendar03Icon,
+  Clock01Icon,
+  LeftToRightListBulletIcon,
+} from "@hugeicons/core-free-icons";
 import { render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Contact from "../../components/Contact.astro";
+import HugeIcon from "../../components/HugeIcon.astro";
 import {
   SITE_URL,
   formatDate,
@@ -66,7 +74,10 @@ const jsonLd = {
   <div class="read-progress" id="read-progress" aria-hidden="true"></div>
 
   <main id="main" class="post shell">
-    <a class="back-link" href="/blog/"><span aria-hidden="true">←</span> Barcha maqolalar</a>
+    <a class="back-link" href="/blog/">
+      <HugeIcon icon={ArrowLeft01Icon} size={15} anim="arrow-left" />
+      Barcha maqolalar
+    </a>
 
     <header class="post-header">
       <ul class="post-tags" aria-label="Teglar">
@@ -75,9 +86,15 @@ const jsonLd = {
       <h1>{post.data.title}</h1>
       <p class="post-lead">{post.data.description}</p>
       <p class="post-meta">
-        <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
+        <span class="meta-item">
+          <HugeIcon icon={Calendar03Icon} size={14} anim="spark" />
+          <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
+        </span>
         <span aria-hidden="true">·</span>
-        <span>{minutes} daqiqa o‘qish</span>
+        <span class="meta-item">
+          <HugeIcon icon={Clock01Icon} size={14} anim="spin" />
+          {minutes} daqiqa o‘qish
+        </span>
         {
           post.data.updatedDate && (
             <>
@@ -100,7 +117,10 @@ const jsonLd = {
       {
         toc.length > 1 && (
           <aside class="toc" aria-label="Mundarija">
-            <p class="toc-title">// MUNDARIJA</p>
+            <p class="toc-title">
+              <HugeIcon icon={LeftToRightListBulletIcon} size={14} anim="layers" />
+              // MUNDARIJA
+            </p>
             <ol>
               {toc.map((heading) => (
                 <li class={`toc-depth-${heading.depth}`}>
@@ -119,7 +139,10 @@ const jsonLd = {
       {
         older ? (
           <a href={`/blog/${older.id}/`} rel="prev">
-            <span class="post-nav-label">← Oldingi</span>
+            <span class="post-nav-label">
+              <HugeIcon icon={ArrowLeft01Icon} size={14} anim="arrow-left" />
+              Oldingi
+            </span>
             <span class="post-nav-title">{older.data.title}</span>
           </a>
         ) : (
@@ -129,7 +152,10 @@ const jsonLd = {
       {
         newer ? (
           <a href={`/blog/${newer.id}/`} rel="next" class="post-nav-next">
-            <span class="post-nav-label">Keyingi →</span>
+            <span class="post-nav-label">
+              Keyingi
+              <HugeIcon icon={ArrowRight01Icon} size={14} anim="arrow-right" />
+            </span>
             <span class="post-nav-title">{newer.data.title}</span>
           </a>
         ) : (
@@ -303,12 +329,19 @@ const jsonLd = {
   .post-meta {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.5rem 0.75rem;
     margin: 0;
     color: var(--ink-faint);
     font-family: var(--mono);
     font-size: 0.75rem;
     font-variant-numeric: tabular-nums;
+  }
+
+  .meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
   }
 
   .draft-badge {
@@ -337,6 +370,9 @@ const jsonLd = {
   }
 
   .toc-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
     margin: 0 0 0.9rem;
     color: var(--signal-dim);
     font-family: var(--mono);
@@ -402,9 +438,16 @@ const jsonLd = {
   }
 
   .post-nav-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     color: var(--ink-faint);
     font-family: var(--mono);
     font-size: 0.72rem;
+  }
+
+  .post-nav-next .post-nav-label {
+    justify-content: flex-end;
   }
 
   .post-nav-title {

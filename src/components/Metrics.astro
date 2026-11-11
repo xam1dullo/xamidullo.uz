@@ -1,6 +1,20 @@
 ---
+import {
+  Briefcase01Icon,
+  CloudServerIcon,
+  CpuChargeIcon,
+  FlashIcon,
+} from "@hugeicons/core-free-icons";
 import { defaultContent } from "../data/portfolio";
+import HugeIcon from "./HugeIcon.astro";
+
 const { metrics, metricsHeading } = defaultContent;
+const metricIcons = [
+  { icon: Briefcase01Icon, anim: "spark" as const },
+  { icon: FlashIcon, anim: "pulse" as const },
+  { icon: CpuChargeIcon, anim: "layers" as const },
+  { icon: CloudServerIcon, anim: "layers" as const },
+];
 ---
 
 <section class="metrics reveal-on-scroll" aria-labelledby="metrics-title">
@@ -12,22 +26,30 @@ const { metrics, metricsHeading } = defaultContent;
     </div>
     <dl class="metrics-list">
       {
-        metrics.map(({ value, suffix, label, detail, numericTarget }, idx) => (
-          <div class="metric" data-target={numericTarget}>
-            <span class="metric-idx" aria-hidden="true">0{idx + 1}</span>
-            <dt>{label}</dt>
-            <dd>
-              <strong>
-                <span class="metric-number">{numericTarget}</span>
-                {value.includes("+") && "+"}
-                {value.includes("×") && "×"}
-                {value.includes("%") && "%"}
-              </strong>
-              {suffix && <span class="metric-suffix">{suffix}</span>}
-            </dd>
-            <p>{detail}</p>
-          </div>
-        ))
+        metrics.map(({ value, suffix, label, detail, numericTarget }, idx) => {
+          const iconMeta = metricIcons[idx] ?? metricIcons[0];
+          return (
+            <div class="metric" data-target={numericTarget}>
+              <div class="metric-top-bar" aria-hidden="true">
+                <span class="metric-idx">0{idx + 1}</span>
+                <span class="metric-icon-badge">
+                  <HugeIcon icon={iconMeta.icon} size={16} anim={iconMeta.anim} />
+                </span>
+              </div>
+              <dt>{label}</dt>
+              <dd>
+                <strong>
+                  <span class="metric-number">{numericTarget}</span>
+                  {value.includes("+") && "+"}
+                  {value.includes("×") && "×"}
+                  {value.includes("%") && "%"}
+                </strong>
+                {suffix && <span class="metric-suffix">{suffix}</span>}
+              </dd>
+              <p>{detail}</p>
+            </div>
+          );
+        })
       }
     </dl>
   </div>
@@ -42,11 +64,29 @@ const { metrics, metricsHeading } = defaultContent;
     max-inline-size: 26rem;
   }
 
+  .metric-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
   .metric-idx {
     display: inline-block;
     font-family: var(--mono);
     font-size: 0.65rem;
     color: var(--signal-dim);
     letter-spacing: 0.08em;
+  }
+
+  .metric-icon-badge {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(var(--signal-rgb) / 0.3);
+    background: rgb(var(--signal-rgb) / 0.1);
+    color: var(--signal-hover);
   }
 </style>

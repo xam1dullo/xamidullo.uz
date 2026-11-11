@@ -1,4 +1,6 @@
 ---
+import { Cancel01Icon, ComputerTerminal01Icon } from "@hugeicons/core-free-icons";
+import HugeIcon from "./HugeIcon.astro";
 ---
 
 <dialog id="cli-terminal" class="terminal-modal" aria-labelledby="terminal-title">
@@ -9,9 +11,12 @@
         <span class="dot dot-yellow"></span>
         <span class="dot dot-green"></span>
       </div>
-      <span class="terminal-title" id="terminal-title">xamidullo@systems: ~ (zsh)</span>
+      <span class="terminal-title" id="terminal-title">
+        <HugeIcon icon={ComputerTerminal01Icon} size={14} anim="terminal" />
+        xamidullo@systems: ~ (zsh)
+      </span>
       <button type="button" class="terminal-close-btn" id="terminal-close-btn" aria-label="Terminalni yopish">
-        ✕
+        <HugeIcon icon={Cancel01Icon} size={16} anim="spin" />
       </button>
     </div>
 
@@ -293,6 +298,9 @@ round-trip min/avg/max = 11.894/12.139/12.420 ms (STATUS: OPTIMAL)
   .dot-green { background: var(--line-bright); }
 
   .terminal-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     font-size: 0.72rem;
     color: var(--ink-soft);
     letter-spacing: 0.05em;

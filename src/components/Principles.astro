@@ -1,6 +1,21 @@
 ---
+import {
+  AnalyticsUpIcon,
+  GitBranchIcon,
+  QuoteUpIcon,
+  Shield02Icon,
+  Target02Icon,
+} from "@hugeicons/core-free-icons";
 import { defaultContent } from "../data/portfolio";
+import HugeIcon from "./HugeIcon.astro";
+
 const { principlesHeading, principles } = defaultContent;
+const principleIcons = [
+  { icon: Shield02Icon, anim: "spark" as const },
+  { icon: Target02Icon, anim: "pulse" as const },
+  { icon: AnalyticsUpIcon, anim: "pulse" as const },
+  { icon: GitBranchIcon, anim: "layers" as const },
+];
 ---
 
 <section class="principles-section shell reveal-on-scroll" id="about" aria-labelledby="principles-title">
@@ -15,7 +30,12 @@ const { principlesHeading, principles } = defaultContent;
   <div class="principles-layout">
     <article class="belief-card bento-card">
       <div class="belief-top">
-        <span class="belief-kicker">// ISH TAMOYILI · ENGINEERING CREDO</span>
+        <div class="belief-kicker-row">
+          <span class="belief-kicker">// ISH TAMOYILI · ENGINEERING CREDO</span>
+          <span class="belief-quote-icon" aria-hidden="true">
+            <HugeIcon icon={QuoteUpIcon} size={20} anim="spark" />
+          </span>
+        </div>
         <blockquote data-i18n="principlesHeading.quote">
           {principlesHeading.quote}
         </blockquote>
@@ -40,15 +60,23 @@ const { principlesHeading, principles } = defaultContent;
 
     <div class="values-grid">
       {
-        principles.map(({ number, title, detail }) => (
-          <article class="value-item">
-            <span class="value-number">{number}</span>
-            <div class="value-body">
-              <h3>{title}</h3>
-              <p>{detail}</p>
-            </div>
-          </article>
-        ))
+        principles.map(({ number, title, detail }, idx) => {
+          const iconMeta = principleIcons[idx] ?? principleIcons[0];
+          return (
+            <article class="value-item">
+              <div class="value-head-row">
+                <span class="value-number">{number}</span>
+                <span class="value-icon-box" aria-hidden="true">
+                  <HugeIcon icon={iconMeta.icon} size={17} anim={iconMeta.anim} />
+                </span>
+              </div>
+              <div class="value-body">
+                <h3>{title}</h3>
+                <p>{detail}</p>
+              </div>
+            </article>
+          );
+        })
       }
     </div>
   </div>
@@ -87,13 +115,31 @@ const { principlesHeading, principles } = defaultContent;
       0 1.25rem 2.5rem -1rem rgb(var(--shadow-rgb) / 0.45);
   }
 
+  .belief-kicker-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-block-end: 1.15rem;
+  }
+
   .belief-kicker {
     display: inline-block;
     font-family: var(--mono);
     font-size: 0.72rem;
     letter-spacing: 0.07em;
     color: var(--signal);
-    margin-block-end: 1.15rem;
+  }
+
+  .belief-quote-icon {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    border-radius: 0.6rem;
+    border: 1px solid rgb(var(--signal-rgb) / 0.35);
+    background: rgb(var(--signal-rgb) / 0.12);
+    color: var(--signal-hover);
   }
 
   .belief-card blockquote {
@@ -201,6 +247,13 @@ const { principlesHeading, principles } = defaultContent;
     transform: translateY(-0.15rem);
   }
 
+  .value-head-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
   .value-number {
     display: inline-flex;
     align-items: center;
@@ -215,6 +268,17 @@ const { principlesHeading, principles } = defaultContent;
     font-size: 0.72rem;
     font-variant-numeric: tabular-nums;
     font-weight: 700;
+  }
+
+  .value-icon-box {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 2.1rem;
+    block-size: 2.1rem;
+    border-radius: 0.55rem;
+    border: 1px solid var(--line-bright);
+    background: rgb(var(--canvas-rgb) / 0.55);
+    color: var(--signal-hover);
   }
 
   .value-body h3 {

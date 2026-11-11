@@ -1,6 +1,8 @@
 ---
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { defaultContent } from "../data/portfolio";
 import { getPublishedPosts } from "../lib/blog";
+import HugeIcon from "./HugeIcon.astro";
 import PostCard from "./PostCard.astro";
 
 const { blogHeading } = defaultContent;
@@ -24,7 +26,7 @@ const posts = (await getPublishedPosts()).slice(0, 3);
 
       <a class="button button-secondary all-posts" href="/blog/">
         <span data-i18n="blogHeading.allPosts">{blogHeading.allPosts}</span>
-        <span aria-hidden="true">→</span>
+        <HugeIcon icon={ArrowRight01Icon} size={16} anim="arrow-right" />
       </a>
     </section>
   )

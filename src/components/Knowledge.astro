@@ -1,5 +1,14 @@
 ---
+import {
+  ArrowUpRight01Icon,
+  Linkedin02Icon,
+  Mortarboard02Icon,
+  TelegramIcon,
+  UniversityIcon,
+} from "@hugeicons/core-free-icons";
 import { defaultContent } from "../data/portfolio";
+import HugeIcon from "./HugeIcon.astro";
+
 const { knowledge } = defaultContent;
 ---
 
@@ -7,7 +16,12 @@ const { knowledge } = defaultContent;
   <div class="knowledge">
     <article class="mentor-panel">
       <div>
-        <p class="eyebrow" data-i18n="knowledge.eyebrow">{knowledge.eyebrow}</p>
+        <div class="k-head-row">
+          <p class="eyebrow" data-i18n="knowledge.eyebrow">{knowledge.eyebrow}</p>
+          <span class="k-icon-badge" aria-hidden="true">
+            <HugeIcon icon={Mortarboard02Icon} size={18} anim="spark" />
+          </span>
+        </div>
         <h2 id="knowledge-title" data-i18n="knowledge.title">{knowledge.title}</h2>
         <p data-i18n="knowledge.summary">{knowledge.summary}</p>
       </div>
@@ -23,16 +37,20 @@ const { knowledge } = defaultContent;
           target="_blank"
           rel="noopener noreferrer"
         >
+          <HugeIcon icon={TelegramIcon} size={15} anim="spark" />
           <span data-i18n="knowledge.blogLink">{knowledge.blogLink}</span>
-          <span aria-hidden="true">↗</span>
+          <HugeIcon icon={ArrowUpRight01Icon} size={14} anim="arrow-up-right" />
         </a>
       </div>
     </article>
 
-    <aside class="edu-panel">
+    <aside class="edu-panel edu-card">
       <div class="edu-top">
         <span class="edu-kicker" data-i18n="knowledge.eduLabel">{knowledge.eduLabel}</span>
-        <span class="edu-years" data-i18n="knowledge.eduYears">{knowledge.eduYears}</span>
+        <span class="edu-years">
+          <HugeIcon icon={UniversityIcon} size={14} anim="float" />
+          <span data-i18n="knowledge.eduYears">{knowledge.eduYears}</span>
+        </span>
       </div>
       <div>
         <h3 data-i18n="knowledge.eduTitle">{knowledge.eduTitle}</h3>
@@ -50,8 +68,13 @@ const { knowledge } = defaultContent;
       rel="noopener noreferrer"
     >
       <div class="channel-top">
-        <span class="channel-tag">// TELEGRAM BLOG · @thelazy_programmer</span>
-        <span class="channel-arrow" aria-hidden="true">↗</span>
+        <span class="channel-tag">
+          <HugeIcon icon={TelegramIcon} size={15} anim="spark" />
+          // TELEGRAM BLOG · @thelazy_programmer
+        </span>
+        <span class="channel-arrow" aria-hidden="true">
+          <HugeIcon icon={ArrowUpRight01Icon} size={18} anim="arrow-up-right" />
+        </span>
       </div>
       <h3>The Lazy Programmer</h3>
       <p data-i18n="knowledge.blogDesc">{knowledge.blogDesc}</p>
@@ -64,8 +87,13 @@ const { knowledge } = defaultContent;
       rel="noopener noreferrer"
     >
       <div class="channel-top">
-        <span class="channel-tag">// LINKEDIN · PROFESSIONAL POST</span>
-        <span class="channel-arrow" aria-hidden="true">↗</span>
+        <span class="channel-tag">
+          <HugeIcon icon={Linkedin02Icon} size={15} anim="spark" />
+          // LINKEDIN · PROFESSIONAL POST
+        </span>
+        <span class="channel-arrow" aria-hidden="true">
+          <HugeIcon icon={ArrowUpRight01Icon} size={18} anim="arrow-up-right" />
+        </span>
       </div>
       <h3 data-i18n="knowledge.linkedinTitle">{knowledge.linkedinTitle}</h3>
       <p data-i18n="knowledge.linkedinDesc">{knowledge.linkedinDesc}</p>
@@ -153,8 +181,29 @@ const { knowledge } = defaultContent;
     gap: 0.75rem;
   }
 
+  .k-head-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .k-icon-badge {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 2.2rem;
+    block-size: 2.2rem;
+    border-radius: 0.6rem;
+    border: 1px solid rgb(var(--signal-rgb) / 0.35);
+    background: rgb(var(--signal-rgb) / 0.12);
+    color: var(--signal-hover);
+  }
+
   .edu-kicker,
   .edu-years {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     font-family: var(--mono);
     font-size: 0.72rem;
     font-variant-numeric: tabular-nums;
@@ -202,6 +251,9 @@ const { knowledge } = defaultContent;
   }
 
   .channel-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
     font-family: var(--mono);
     font-size: 0.72rem;
     letter-spacing: 0.06em;

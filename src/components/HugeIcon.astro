@@ -1,0 +1,98 @@
+---
+export type HugeIconNode = readonly [string, Record<string, string | number>];
+export type HugeIconData = readonly HugeIconNode[];
+
+interface Props {
+  icon: HugeIconData;
+  size?: number | string;
+  strokeWidth?: number | string;
+  class?: string;
+  anim?:
+    | "arrow-up-right"
+    | "arrow-right"
+    | "arrow-down"
+    | "arrow-left"
+    | "arrow-up"
+    | "terminal"
+    | "spin"
+    | "pulse"
+    | "spark"
+    | "layers"
+    | "float";
+  label?: string;
+}
+
+const {
+  icon,
+  size = 18,
+  strokeWidth = 1.65,
+  class: className = "",
+  anim = "spark",
+  label,
+} = Astro.props;
+
+const ATTR_MAP: Record<string, string> = {
+  strokeLinecap: "stroke-linecap",
+  strokeLinejoin: "stroke-linejoin",
+  strokeWidth: "stroke-width",
+  strokeDasharray: "stroke-dasharray",
+  strokeDashoffset: "stroke-dashoffset",
+  strokeMiterlimit: "stroke-miterlimit",
+  fillRule: "fill-rule",
+  clipRule: "clip-rule",
+  fillOpacity: "fill-opacity",
+  strokeOpacity: "stroke-opacity",
+};
+
+function normalizeAttrs(raw: Record<string, string | number>, index: number) {
+  const out: Record<string, string | number> = {
+    class: `hi-part hi-part-${index}`,
+    "data-hi-part": String(index),
+  };
+  for (const [k, v] of Object.entries(raw)) {
+    if (k === "key") continue;
+    const mapped = ATTR_MAP[k] ?? k;
+    out[mapped] = mapped === "stroke-width" ? strokeWidth : v;
+  }
+  return out;
+}
+
+const elements = (icon ?? []).map(([tag, attrs], index) => ({
+  tag,
+  attrs: normalizeAttrs(attrs, index),
+}));
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill="none"
+  color="currentColor"
+  class:list={["huge-icon", className]}
+  data-anim={anim}
+  role={label ? "img" : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : "true"}
+>
+  {
+    elements.map(({ tag, attrs }) =>
+      tag === "path" ? (
+        <path {...attrs} />
+      ) : tag === "circle" ? (
+        <circle {...attrs} />
+      ) : tag === "rect" ? (
+        <rect {...attrs} />
+      ) : tag === "line" ? (
+        <line {...attrs} />
+      ) : tag === "polyline" ? (
+        <polyline {...attrs} />
+      ) : tag === "polygon" ? (
+        <polygon {...attrs} />
+      ) : tag === "ellipse" ? (
+        <ellipse {...attrs} />
+      ) : null
+    )
+  }
+</svg>

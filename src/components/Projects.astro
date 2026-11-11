@@ -1,5 +1,12 @@
 ---
+import {
+  ArrowRight02Icon,
+  ArrowUpRight01Icon,
+  HierarchySquare01Icon,
+} from "@hugeicons/core-free-icons";
 import { defaultContent } from "../data/portfolio";
+import HugeIcon from "./HugeIcon.astro";
+
 const { projects, archiveProjects, workHeading } = defaultContent;
 ---
 
@@ -30,7 +37,8 @@ const { projects, archiveProjects, workHeading } = defaultContent;
                   rel="noopener noreferrer"
                 >
                   <span class="live-dot" aria-hidden="true"></span>
-                  {domain} ↗
+                  {domain}
+                  <HugeIcon icon={ArrowUpRight01Icon} size={13} anim="arrow-up-right" />
                 </a>
               </div>
 
@@ -53,22 +61,7 @@ const { projects, archiveProjects, workHeading } = defaultContent;
                     data-open-drawer={project.id}
                     aria-label={`${project.name} arxitekturasini o'rganish`}
                   >
-                    <svg
-                      class="cs-icon"
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      width="15"
-                      height="15"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                      <polyline points="2 17 12 22 22 17"></polyline>
-                      <polyline points="2 12 12 17 22 12"></polyline>
-                    </svg>
+                    <HugeIcon icon={HierarchySquare01Icon} size={16} anim="layers" class="cs-icon" />
                     <span class="cs-btn-text" data-i18n="workHeading.caseStudyBtn">
                       {workHeading.caseStudyBtn}
                     </span>
@@ -81,7 +74,7 @@ const { projects, archiveProjects, workHeading } = defaultContent;
                   rel="noopener noreferrer"
                   aria-label={`${project.name} saytiga o'tish`}
                 >
-                  ↗
+                  <HugeIcon icon={ArrowUpRight01Icon} size={18} anim="arrow-up-right" />
                 </a>
               </div>
             </div>
@@ -103,15 +96,7 @@ const { projects, archiveProjects, workHeading } = defaultContent;
                       </div>
                       {idx < arr.length - 1 && (
                         <span class="bp-connector" aria-hidden="true">
-                          <svg viewBox="0 0 24 12" width="22" height="12" fill="none">
-                            <path
-                              d="M0 6H20M16 2L20 6L16 10"
-                              stroke="currentColor"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
+                          <HugeIcon icon={ArrowRight02Icon} size={16} anim="arrow-right" />
                         </span>
                       )}
                     </div>
@@ -158,7 +143,8 @@ const { projects, archiveProjects, workHeading } = defaultContent;
                 <span class="archive-mark">{item.mark}</span>
                 <span class="archive-domain">
                   <span class="live-dot" aria-hidden="true"></span>
-                  {domain} ↗
+                  {domain}
+                  <HugeIcon icon={ArrowUpRight01Icon} size={13} anim="arrow-up-right" />
                 </span>
               </div>
               <div class="archive-card-body">

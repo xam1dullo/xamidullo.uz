@@ -1,5 +1,8 @@
 ---
+import { Building03Icon, Calendar03Icon } from "@hugeicons/core-free-icons";
 import { defaultContent } from "../data/portfolio";
+import HugeIcon from "./HugeIcon.astro";
+
 const { experience, experienceHeading } = defaultContent;
 ---
 
@@ -20,12 +23,16 @@ const { experience, experienceHeading } = defaultContent;
             <article>
               <div class="timeline-time-col">
                 <span class="timeline-dot" aria-hidden="true"></span>
+                <HugeIcon icon={Calendar03Icon} size={14} anim="spark" class="time-icon" />
                 <time>{item.period}</time>
               </div>
               <div class="timeline-content">
                 <div class="timeline-role-head">
                   <h3>{item.title}</h3>
-                  <p class="company">{item.company}</p>
+                  <p class="company-badge">
+                    <HugeIcon icon={Building03Icon} size={14} anim="float" />
+                    <span class="company">{item.company}</span>
+                  </p>
                 </div>
                 <p class="timeline-detail">{item.detail}</p>
 
@@ -60,8 +67,12 @@ const { experience, experienceHeading } = defaultContent;
 
   .timeline-time-col {
     display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .time-icon {
+    color: var(--signal);
   }
 
   .timeline-dot {
@@ -70,8 +81,17 @@ const { experience, experienceHeading } = defaultContent;
     block-size: 0.5rem;
     border-radius: 50%;
     background: var(--line-bright);
-    margin-block-start: 0.45rem;
     transition: background-color 250ms ease, transform 250ms ease;
+  }
+
+  .company-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin: 0 !important;
+    color: var(--ink-soft) !important;
+    font-family: var(--mono);
+    font-size: 0.75rem !important;
   }
 
   .timeline-active .timeline-dot {

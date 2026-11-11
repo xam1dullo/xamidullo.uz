@@ -1,5 +1,11 @@
 ---
+import {
+  ArrowRight01Icon,
+  Calendar03Icon,
+  Clock01Icon,
+} from "@hugeicons/core-free-icons";
 import { formatDate, isoDate, readingMinutes, type BlogPost } from "../lib/blog";
+import HugeIcon from "./HugeIcon.astro";
 
 interface Props {
   post: BlogPost;
@@ -14,8 +20,14 @@ const minutes = readingMinutes(post.body);
 <li class="post-row" data-tags={post.data.tags.join(",")}>
   <a class="post-card bento-card" href={`/blog/${post.id}/`}>
     <div class="post-card-top">
-      <time class="post-date" datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
-      <span class="post-meta">{minutes} daqiqa o‘qish</span>
+      <time class="post-date" datetime={isoDate(post.data.pubDate)}>
+        <HugeIcon icon={Calendar03Icon} size={13} anim="spark" />
+        {formatDate(post.data.pubDate)}
+      </time>
+      <span class="post-meta">
+        <HugeIcon icon={Clock01Icon} size={13} anim="spin" />
+        {minutes} daqiqa o‘qish
+      </span>
     </div>
 
     <div class="post-body">
@@ -27,7 +39,9 @@ const minutes = readingMinutes(post.body);
       <ul class="post-tags" aria-label="Teglar">
         {post.data.tags.map((tag) => <li>{tag}</li>)}
       </ul>
-      <span class="post-arrow" aria-hidden="true">→</span>
+      <span class="post-arrow" aria-hidden="true">
+        <HugeIcon icon={ArrowRight01Icon} size={17} anim="arrow-right" />
+      </span>
     </div>
   </a>
 </li>
@@ -104,6 +118,9 @@ const minutes = readingMinutes(post.body);
 
   .post-date,
   .post-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     color: var(--ink-faint);
     font-family: var(--mono);
     font-size: 0.72rem;

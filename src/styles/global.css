@@ -895,6 +895,157 @@
         transform: translateY(0);
       }
     }
+
+    /* ======================================================================
+       HUGEICONS MULTI-PATH MICRO-ANIMATION ENGINE
+       Animates individual SVG sub-paths (.hi-part-0, .hi-part-1, .hi-part-2)
+       with spring physics on parent hover / focus-visible.
+       ====================================================================== */
+    .huge-icon {
+      flex: none;
+      display: inline-block;
+      vertical-align: middle;
+      overflow: visible;
+      transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms ease;
+    }
+
+    .huge-icon .hi-part {
+      transform-box: fill-box;
+      transform-origin: center;
+      transition:
+        transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 220ms ease;
+    }
+
+    /* 1. Diagonal Launch (arrow-up-right) */
+    :is(a, button, .bento-card, .project-card, .archive-card, .channel-card, .post-card):is(:hover, :focus-visible)
+      .huge-icon[data-anim="arrow-up-right"] {
+      transform: translate(2.5px, -2.5px) scale(1.06);
+    }
+
+    :is(a, button, .bento-card, .project-card, .archive-card, .channel-card, .post-card):is(:hover, :focus-visible)
+      .huge-icon[data-anim="arrow-up-right"]
+      .hi-part-0 {
+      transform: translate(1px, -1px);
+    }
+
+    /* 2. Directional Spring Nudge (arrow-right / arrow-left / arrow-down / arrow-up) */
+    :is(a, button, .bento-card, .post-card):is(:hover, :focus-visible)
+      .huge-icon[data-anim="arrow-right"] {
+      transform: translateX(3px);
+    }
+
+    :is(a, button):is(:hover, :focus-visible)
+      .huge-icon[data-anim="arrow-left"] {
+      transform: translateX(-3px);
+    }
+
+    :is(a, button):is(:hover, :focus-visible)
+      .huge-icon[data-anim="arrow-down"] {
+      transform: translateY(2.5px);
+    }
+
+    :is(a, button):is(:hover, :focus-visible)
+      .huge-icon[data-anim="arrow-up"] {
+      transform: translateY(-2.5px);
+    }
+
+    /* 3. Terminal Multi-Path (chevron shifts right, cursor blinks) */
+    :is(a, button):is(:hover, :focus-visible)
+      .huge-icon[data-anim="terminal"] {
+      transform: scale(1.06);
+    }
+
+    :is(a, button):is(:hover, :focus-visible)
+      .huge-icon[data-anim="terminal"]
+      .hi-part-0 {
+      transform: translateX(1.6px);
+    }
+
+    :is(a, button):is(:hover, :focus-visible)
+      .huge-icon[data-anim="terminal"]
+      .hi-part-1 {
+      animation: hi-cursor-blink 650ms steps(2, start) infinite;
+    }
+
+    /* 4. Orbital Spin (Sun / Moon / Global / Settings) */
+    :is(a, button, .bento-card):is(:hover, :focus-visible)
+      .huge-icon[data-anim="spin"] {
+      transform: rotate(22deg) scale(1.08);
+    }
+
+    :is(a, button, .bento-card):is(:hover, :focus-visible)
+      .huge-icon[data-anim="spin"]
+      .hi-part-1 {
+      transform: rotate(-12deg) scale(1.05);
+    }
+
+    /* 5. Multi-Layer Stack Separation (Layers / Database / ServerStack / Hierarchy) */
+    :is(a, button, .bento-card, .capability, .metric):is(:hover, :focus-visible)
+      .huge-icon[data-anim="layers"] {
+      transform: scale(1.06);
+    }
+
+    :is(a, button, .bento-card, .capability, .metric):is(:hover, :focus-visible)
+      .huge-icon[data-anim="layers"]
+      .hi-part-0 {
+      transform: translateY(-1.6px);
+    }
+
+    :is(a, button, .bento-card, .capability, .metric):is(:hover, :focus-visible)
+      .huge-icon[data-anim="layers"]
+      .hi-part-2 {
+      transform: translateY(1.6px);
+    }
+
+    /* 6. Pulse & Telemetry Wave (Activity / Flash / Rss / Speed) */
+    :is(a, button, .bento-card, .capability, .metric, .telemetry-item):is(:hover, :focus-visible)
+      .huge-icon[data-anim="pulse"] {
+      transform: scale(1.1);
+    }
+
+    :is(a, button, .bento-card, .capability, .metric, .telemetry-item):is(:hover, :focus-visible)
+      .huge-icon[data-anim="pulse"]
+      .hi-part-0 {
+      animation: hi-pulse-wave 700ms ease-in-out infinite alternate;
+    }
+
+    /* 7. Spark & Badge Pop (Shield / Target / Award / Checkmark / Code) */
+    :is(a, button, .bento-card, .capability, .metric, .belief-card, .value-item, .channel-card, .edu-card):is(:hover, :focus-visible)
+      .huge-icon[data-anim="spark"] {
+      transform: translateY(-1.5px) scale(1.08);
+    }
+
+    :is(a, button, .bento-card, .capability, .metric, .belief-card, .value-item, .channel-card, .edu-card):is(:hover, :focus-visible)
+      .huge-icon[data-anim="spark"]
+      .hi-part-1 {
+      transform: scale(1.14) rotate(6deg);
+    }
+
+    /* 8. Gentle Float */
+    :is(a, button, .bento-card):is(:hover, :focus-visible)
+      .huge-icon[data-anim="float"] {
+      transform: translateY(-2px);
+    }
+
+    @keyframes hi-cursor-blink {
+      0%,
+      100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.2;
+      }
+    }
+
+    @keyframes hi-pulse-wave {
+      from {
+        transform: scale(0.94);
+      }
+      to {
+        transform: scale(1.12);
+      }
+    }
   }
 }
 
