@@ -1,0 +1,246 @@
+---
+import { defaultContent } from "../data/portfolio";
+const { principlesHeading, principles } = defaultContent;
+---
+
+<section class="principles-section shell reveal-on-scroll" id="about" aria-labelledby="principles-title">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow" data-i18n="principlesHeading.eyebrow">{principlesHeading.eyebrow}</p>
+      <h2 id="principles-title" data-i18n="principlesHeading.title">{principlesHeading.title}</h2>
+    </div>
+    <p data-i18n="principlesHeading.summary">{principlesHeading.summary}</p>
+  </div>
+
+  <div class="principles-layout">
+    <article class="belief-card bento-card">
+      <div class="belief-top">
+        <span class="belief-kicker">// ISH TAMOYILI · ENGINEERING CREDO</span>
+        <blockquote data-i18n="principlesHeading.quote">
+          {principlesHeading.quote}
+        </blockquote>
+      </div>
+      <footer class="belief-footer">
+        <div class="belief-author-row">
+          <img
+            src="https://avatars.githubusercontent.com/u/74096482?v=4"
+            alt=""
+            width="42"
+            height="42"
+            loading="lazy"
+            decoding="async"
+          />
+          <div>
+            <strong data-i18n="principlesHeading.quoteAuthor">{principlesHeading.quoteAuthor}</strong>
+            <span>Senior Software Engineer · Ucell</span>
+          </div>
+        </div>
+      </footer>
+    </article>
+
+    <div class="values-grid">
+      {
+        principles.map(({ number, title, detail }) => (
+          <article class="value-item">
+            <span class="value-number">{number}</span>
+            <div class="value-body">
+              <h3>{title}</h3>
+              <p>{detail}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .principles-section {
+    padding-block: clamp(4.5rem, 8vw, 7.5rem);
+    border-block-end: 1px solid var(--line);
+  }
+
+  .principles-layout {
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.85fr) minmax(0, 1.15fr);
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+
+  .belief-card {
+    --mouse-x: -9999px;
+    --mouse-y: -9999px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2.5rem;
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    border-radius: 1.35rem;
+    border: 1px solid var(--line-bright);
+    background:
+      radial-gradient(28rem 18rem at 0% 0%, rgb(var(--signal-rgb) / 0.16), transparent 70%),
+      linear-gradient(180deg, rgb(var(--surface-raised-rgb) / 0.75), rgb(var(--surface-rgb) / 0.92));
+    box-shadow:
+      inset 0 1px 0 var(--border-inset),
+      0 1.25rem 2.5rem -1rem rgb(var(--shadow-rgb) / 0.45);
+  }
+
+  .belief-kicker {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    color: var(--signal);
+    margin-block-end: 1.15rem;
+  }
+
+  .belief-card blockquote {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--display);
+    font-size: clamp(1.45rem, 2.2vw, 1.95rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  .belief-footer {
+    padding-block-start: 1.25rem;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .belief-author-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .belief-author-row img {
+    inline-size: 2.6rem;
+    block-size: 2.6rem;
+    border-radius: 0.65rem;
+    object-fit: cover;
+    border: 1px solid rgb(var(--signal-rgb) / 0.45);
+  }
+
+  .belief-author-row div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .belief-author-row strong {
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .belief-author-row span {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.15rem;
+  }
+
+  .value-item {
+    --mouse-x: -9999px;
+    --mouse-y: -9999px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.35rem;
+    padding: 1.65rem;
+    border-radius: 1.2rem;
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, rgb(var(--surface-raised-rgb) / 0.6), rgb(var(--surface-rgb) / 0.85));
+    box-shadow:
+      inset 0 1px 0 var(--border-inset),
+      0 1rem 2rem -1rem rgb(var(--shadow-rgb) / 0.4);
+    transition: border-color 180ms ease, transform 180ms ease;
+  }
+
+  .value-item::before,
+  .belief-card::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: radial-gradient(
+      360px circle at var(--mouse-x) var(--mouse-y),
+      rgb(var(--signal-rgb) / 0.12),
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 250ms ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .value-item:hover::before,
+  .belief-card:hover::before {
+    opacity: 1;
+  }
+
+  .value-item > *,
+  .belief-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .value-item:hover {
+    border-color: rgb(var(--signal-rgb) / 0.45);
+    transform: translateY(-0.15rem);
+  }
+
+  .value-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.1rem;
+    block-size: 2.1rem;
+    border-radius: 0.55rem;
+    border: 1px solid rgb(var(--signal-rgb) / 0.35);
+    background: rgb(var(--signal-rgb) / 0.12);
+    color: var(--signal);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+  }
+
+  .value-body h3 {
+    margin: 0 0 0.5rem;
+    color: var(--ink);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .value-body p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 68rem) {
+    .principles-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 44rem) {
+    .values-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

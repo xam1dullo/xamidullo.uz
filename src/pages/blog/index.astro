@@ -1,0 +1,220 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import Contact from "../../components/Contact.astro";
+import { allTags, getPublishedPosts } from "../../lib/blog";
+
+const posts = await getPublishedPosts();
+const tags = allTags(posts);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: "Xamidullo Xudoyberdiyev · Blog",
+  url: "https://xamidullo.uz/blog/",
+  inLanguage: "uz",
+  author: { "@type": "Person", name: "Xamidullo Xudoyberdiyev", url: "https://xamidullo.uz/" },
+};
+---
+
+<BaseLayout
+  title="Blog · Xamidullo Xudoyberdiyev"
+  description="PostgreSQL so‘rovlari, Node.js oqimlari va production Docker konteynerlari bo‘yicha amaliy texnik maqolalar."
+  path="/blog/"
+  jsonLd={jsonLd}
+>
+  <main id="main" class="blog-index shell">
+    <header class="blog-hero">
+      <p class="eyebrow">// BLOG</p>
+      <h1>Amaliy muhandislik maqolalari.</h1>
+      <p class="blog-lead">
+        PostgreSQL, Node.js va Docker bo‘yicha production’da sinovdan o‘tgan yechimlar, kod misollari va o‘lchovlar.
+      </p>
+      <a class="rss-link" href="/rss.xml">RSS oqimiga ulanish <span aria-hidden="true">↗</span></a>
+    </header>
+
+    {
+      tags.length > 0 && (
+        <div class="tag-filter" role="group" aria-label="Teg bo‘yicha filtr">
+          <button type="button" class="tag-chip" data-tag="" aria-pressed="true">
+            Hammasi <span class="tag-count">{posts.length}</span>
+          </button>
+          {tags.map(({ tag, count }) => (
+            <button type="button" class="tag-chip" data-tag={tag} aria-pressed="false">
+              {tag} <span class="tag-count">{count}</span>
+            </button>
+          ))}
+        </div>
+      )
+    }
+
+    <p class="filter-status" id="filter-status" role="status" aria-live="polite"></p>
+
+    {
+      posts.length > 0 ? (
+        <ul class="post-list" id="post-list">
+          {posts.map((post) => <PostCard post={post} headingLevel="h2" />)}
+        </ul>
+      ) : (
+        <p class="empty-state">
+          Tanlangan teg bo‘yicha maqola topilmadi. Yangi texnik yozuvlarni{" "}
+          <a href="https://t.me/thelazy_programmer" target="_blank" rel="noopener noreferrer">
+            @thelazy_programmer
+          </a>{" "}
+          Telegram kanalida ham o‘qishingiz mumkin.
+        </p>
+      )
+    }
+  </main>
+
+  <Contact />
+
+  <script>
+    const list = document.getElementById("post-list");
+    const status = document.getElementById("filter-status");
+    const chips = Array.from(document.querySelectorAll<HTMLButtonElement>(".tag-chip"));
+
+    function applyFilter(tag: string, updateUrl: boolean) {
+      if (!list) return;
+      const rows = Array.from(list.querySelectorAll<HTMLElement>(".post-row"));
+      let visible = 0;
+      for (const row of rows) {
+        const rowTags = (row.dataset.tags ?? "").split(",");
+        const match = tag === "" || rowTags.includes(tag);
+        row.hidden = !match;
+        if (match) visible += 1;
+      }
+      for (const chip of chips) {
+        chip.setAttribute("aria-pressed", String((chip.dataset.tag ?? "") === tag));
+      }
+      if (status) {
+        status.textContent = tag === "" ? "" : `“${tag}” bo‘yicha ${visible} ta maqola`;
+      }
+      if (updateUrl) {
+        const url = new URL(window.location.href);
+        if (tag === "") url.searchParams.delete("tag");
+        else url.searchParams.set("tag", tag);
+        history.replaceState(null, "", url);
+      }
+    }
+
+    for (const chip of chips) {
+      chip.addEventListener("click", () => applyFilter(chip.dataset.tag ?? "", true));
+    }
+
+    const initial = new URL(window.location.href).searchParams.get("tag") ?? "";
+    if (initial && chips.some((chip) => chip.dataset.tag === initial)) {
+      applyFilter(initial, false);
+    }
+  </script>
+</BaseLayout>
+
+<style>
+  .blog-index {
+    padding-block: clamp(3rem, 8vw, 6rem) clamp(2rem, 5vw, 4rem);
+  }
+
+  .blog-hero h1 {
+    max-inline-size: 16ch;
+    margin: 1.1rem 0 1.25rem;
+    color: var(--ink);
+    font-size: clamp(2.6rem, 5.5vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.04;
+  }
+
+  .blog-lead {
+    max-inline-size: 38rem;
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    text-wrap: pretty;
+  }
+
+  .rss-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-block-size: 2.75rem;
+    margin-block-start: 1rem;
+    color: var(--signal);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+  }
+
+  .rss-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.3rem;
+  }
+
+  .tag-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block: 2.5rem 0.5rem;
+  }
+
+  .tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-block-size: 2.75rem;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--line-bright);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, transform 120ms ease;
+  }
+
+  .tag-chip:hover {
+    border-color: var(--signal);
+    color: var(--signal);
+  }
+
+  .tag-chip:active {
+    transform: scale(0.98);
+  }
+
+  .tag-chip[aria-pressed="true"] {
+    border-color: var(--signal);
+    background: var(--signal);
+    color: var(--on-accent);
+  }
+
+  .tag-count {
+    font-variant-numeric: tabular-nums;
+    opacity: 0.75;
+  }
+
+  .filter-status {
+    min-block-size: 1.5rem;
+    margin: 0.75rem 0;
+    color: var(--ink-faint);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+  }
+
+  .post-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  @media (max-width: 68rem) {
+    .post-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .empty-state {
+    margin-block: 3rem;
+    color: var(--ink-soft);
+  }
+</style>

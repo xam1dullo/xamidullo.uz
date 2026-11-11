@@ -1,0 +1,51 @@
+---
+import { defaultContent } from "../data/portfolio";
+const { capabilities, rangeHeading } = defaultContent;
+---
+
+<section class="operating-range shell reveal-on-scroll" aria-labelledby="range-title">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow" data-i18n="rangeHeading.eyebrow">{rangeHeading.eyebrow}</p>
+      <h2 id="range-title" data-i18n="rangeHeading.title">{rangeHeading.title}</h2>
+    </div>
+    <p data-i18n="rangeHeading.summary">{rangeHeading.summary}</p>
+  </div>
+  <div class="capability-list">
+    {capabilities.map(({ number, title, detail, tags }) => (
+      <article class="capability">
+        <span>{number}</span>
+        <h3>{title}</h3>
+        <p>{detail}</p>
+        {tags && (
+          <ul class="capability-tags" aria-label={`${title} ko'nikmalari`}>
+            {tags.map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        )}
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .capability-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0;
+    margin: 1.25rem 0 0;
+    list-style: none;
+  }
+
+  .capability-tags li {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 0.22rem 0.55rem;
+    border-radius: 0.35rem;
+    border: 1px solid var(--line);
+    color: var(--ink-faint);
+    background: rgb(var(--signal-rgb) / 0.03);
+  }
+</style>

@@ -1,294 +1,62 @@
 ---
-import "../styles/global.css";
+import { personSchema } from "../data/portfolio";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-const projects = [
-  {
-    type: "Commerce platform",
-    name: "SAG Flooring",
-    description:
-      "Mahsulot katalogi, filtrlash, hududiy do‘konlar va savdo murojaatlarini birlashtirgan to‘liq raqamli platforma.",
-    stack: ["End-to-end", "Next.js", "NestJS", "Docker"],
-    url: "https://sagflooring.uz",
-  },
-  {
-    type: "Education product",
-    name: "Automaktab",
-    description:
-      "Haydovchilik ta’limi jarayonlarini raqamlashtiruvchi, markaz va o‘quvchi o‘rtasidagi ish oqimini soddalashtiruvchi mahsulot.",
-    stack: ["Full-stack", "Architecture", "Deploy"],
-    url: "https://automaktab.uz",
-  },
-  {
-    type: "Learning platform",
-    name: "Burro Arab",
-    description:
-      "Arab tilini o‘rganish uchun kontent, mashqlar va foydalanuvchi tajribasini bir tizimga jamlagan ta’lim platformasi.",
-    stack: ["Product", "Backend", "UX"],
-    url: "https://burroarab.uz",
-  },
-];
-
-const capabilities = [
-  { number: "01", title: "Backend", detail: "Node.js, NestJS, Deno va Go bilan ilova hamda servislar." },
-  { number: "02", title: "Data", detail: "PostgreSQL, MongoDB, Oracle SQL va Redis bilan tezkor ma’lumot oqimlari." },
-  { number: "03", title: "Infra", detail: "Docker, Nginx, Linux, CI/CD va AWS bilan production tizimlari." },
-  { number: "04", title: "Quality", detail: "Testing, monitoring, clean code, architecture va mentorlik." },
-];
-
-const experience = [
-  {
-    period: "2025.05 — hozir",
-    title: "Senior Software Engineer",
-    company: "Ucell",
-    detail:
-      "Backend servislar, microservice arxitekturasi, integratsiyalar, performance optimizatsiyasi, DevOps, texnik yetakchilik va Oracle SQL.",
-  },
-  {
-    period: "2024.03 — hozir",
-    title: "Node.js Teacher",
-    company: "Najot Ta’lim · Part-time",
-    detail:
-      "Real loyihalarga tayangan dastur orqali backend developerlarni production deployment ko‘nikmalarigacha tayyorlayman.",
-  },
-  {
-    period: "2023.04 — hozir",
-    title: "Software Engineer",
-    company: "Namangan International School · Part-time",
-    detail:
-      "Node.js, Deno, grammY va Prisma yordamida Telegram avtomatlashtirish mahsulotlarini ishlab chiqaman va qo‘llab-quvvatlayman.",
-  },
-  {
-    period: "2022.02 — 2023.04",
-    title: "Software Engineer",
-    company: "Teclar Dev / Premium IT Solution · Remote",
-    detail:
-      "CI/CD avtomatlashtirish, AWS migratsiyasi, microservice hamda websocket arxitekturasi, xotira va queue optimizatsiyasi.",
-  },
-  {
-    period: "2021.10 — 2022.02",
-    title: "Software Engineer Intern",
-    company: "Teclar Dev / Premium IT Solution",
-    detail:
-      "Ajv bilan schema validation, Playwright orqali autentifikatsiya va job-posting yig‘ish jarayonlarini avtomatlashtirish.",
-  },
-];
-
-const metrics = [
-  { value: "4+", suffix: "yil", label: "Production tajribasi", detail: "Backend · full-stack · DevOps" },
-  { value: "3×", suffix: "", label: "Tezroq servis javobi", detail: "Bottleneck audit · query tuning" },
-  { value: "90%", suffix: "", label: "Kamroq xotira sarfi", detail: "Streaming · runtime optimizatsiyasi" },
-];
-
-const personSchema = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Xamidullo Xudoyberdiyev",
-  jobTitle: "Senior Software Engineer",
-  worksFor: { "@type": "Organization", name: "Ucell" },
-  url: "https://xamidullo.uz/",
-  email: "khkhamidullo@gmail.com",
-  sameAs: [
-    "https://t.me/Xamidullo_Xudoyberdiyev",
-    "https://www.linkedin.com/in/xam1dullo/",
-    "https://github.com/xam1dullo",
-  ],
-};
+import Hero from "../components/Hero.astro";
+import Metrics from "../components/Metrics.astro";
+import Principles from "../components/Principles.astro";
+import Capabilities from "../components/Capabilities.astro";
+import Projects from "../components/Projects.astro";
+import ProjectDrawer from "../components/ProjectDrawer.astro";
+import Timeline from "../components/Timeline.astro";
+import LatestPosts from "../components/LatestPosts.astro";
+import Knowledge from "../components/Knowledge.astro";
+import TelemetryBar from "../components/TelemetryBar.astro";
+import Contact from "../components/Contact.astro";
 ---
 
-<!doctype html>
-<html lang="uz">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Xamidullo Xudoyberdiyev — Ucell'dagi Senior Software Engineer. Backend arxitektura, full-stack mahsulotlar, DevOps va Node.js mentorlik."
-    />
-    <meta name="theme-color" content="#0b100e" />
-    <meta name="color-scheme" content="dark" />
-    <link rel="canonical" href="https://xamidullo.uz/" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="uz_UZ" />
-    <meta property="og:title" content="Xamidullo Xudoyberdiyev — Senior Software Engineer" />
-    <meta
-      property="og:description"
-      content="Murakkab texnik muammolarni biznesga real qiymat beradigan, tezkor va barqaror mahsulotlarga aylantiraman."
-    />
-    <meta property="og:url" content="https://xamidullo.uz/" />
-    <meta property="og:image" content="https://avatars.githubusercontent.com/u/74096482?v=4" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Xamidullo Xudoyberdiyev — Senior Software Engineer" />
-    <meta
-      name="twitter:description"
-      content="Murakkab texnik muammolarni biznesga real qiymat beradigan, tezkor va barqaror mahsulotlarga aylantiraman."
-    />
-    <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/74096482?v=4" />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)}></script>
-    <title>Xamidullo Xudoyberdiyev — Senior Software Engineer</title>
-  </head>
-  <body>
-    <a class="skip-link" href="#main">Asosiy tarkibga o‘tish</a>
+<BaseLayout
+  title="Xamidullo Xudoyberdiyev · Senior Software Engineer"
+  description="Xamidullo Xudoyberdiyev, Ucell’da Senior Software Engineer. Backend arxitektura, yuqori yuklamali mikroservislar, ma’lumotlar bazasi optimizatsiyasi, DevOps va Node.js mentorligi."
+  path="/"
+  jsonLd={personSchema}
+  variant="home"
+>
+  <main id="main">
+    <Hero />
+    <Metrics />
+    <Principles />
+    <Capabilities />
+    <Projects />
+    <Timeline />
+    <LatestPosts />
+    <Knowledge />
+  </main>
 
-    <header class="site-header">
-      <div class="shell header-content">
-        <a class="wordmark" href="#top" aria-label="Bosh sahifa">XH<span>/</span>SYSTEMS</a>
-        <nav aria-label="Asosiy navigatsiya">
-          <ul class="nav-list">
-            <li><a href="#work">Ishlar</a></li>
-            <li><a href="#experience">Tajriba</a></li>
-            <li><a href="#contact">Aloqa</a></li>
-          </ul>
-        </nav>
-        <span class="availability"><span aria-hidden="true"></span> Hamkorlik uchun ochiq</span>
-      </div>
-    </header>
+  <TelemetryBar />
+  <Contact />
 
-    <main id="main">
-      <section class="hero shell" id="top" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="eyebrow">// SENIOR SOFTWARE ENGINEER · TOSHKENT</p>
-          <h1 id="hero-title">Tizimni <em>ishonchli</em> ishlataman.</h1>
-          <p class="hero-summary">
-            Backend servislar, ma’lumot oqimlari va infratuzilmani bir tizim deb ko‘raman.
-            Natija: tezroq javob, kamroq xotira va tinchroq production.
-          </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="https://t.me/Xamidullo_Xudoyberdiyev" target="_blank" rel="noopener noreferrer">Telegram orqali bog‘laning <span aria-hidden="true">→</span></a>
-            <a class="button button-secondary" href="#work">Tanlangan ishlar <span aria-hidden="true">↓</span></a>
-          </div>
-        </div>
+  <!-- Interactive Overlays -->
+  <ProjectDrawer />
 
-        <div class="system-map" aria-hidden="true">
-          <span class="map-line map-line-one"></span>
-          <span class="map-line map-line-two"></span>
-          <span class="map-line map-line-three"></span>
-          <span class="map-node node-backend">BACKEND</span>
-          <span class="map-node node-data">DATA</span>
-          <span class="map-node node-product">PRODUCT</span>
-          <span class="map-node node-infra">INFRA</span>
-          <span class="map-core">XH<br />SYSTEMS</span>
-        </div>
-      </section>
+  <script>
+    import { initMotion } from "../scripts/motion";
+    import { initSystemCanvas } from "../scripts/system-canvas";
+    import { initI18n } from "../scripts/i18n";
+    import { initSpotlight } from "../scripts/spotlight";
 
-      <section class="metrics" aria-labelledby="metrics-title">
-        <div class="shell">
-          <div class="section-label">
-            <p class="eyebrow">// ISBOTLANGAN NATIJA</p>
-            <h2 id="metrics-title">Muhandislik, raqamlarda.</h2>
-          </div>
-          <dl class="metrics-list">
-            {metrics.map(({ value, suffix, label, detail }) => (
-              <div class="metric">
-                <dt>{label}</dt>
-                <dd><strong>{value}</strong>{suffix && <span>{suffix}</span>}</dd>
-                <p>{detail}</p>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
+    function bootstrap() {
+      initI18n();
+      initSystemCanvas();
+      initMotion();
+      initSpotlight();
+    }
 
-      <section class="operating-range shell" aria-labelledby="range-title">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">// OPERATING RANGE</p>
-            <h2 id="range-title">Koddan production’gacha bitta mas’uliyat.</h2>
-          </div>
-          <p>Texnologiyani trend uchun emas, muammo, jamoa va uzoq muddatli qo‘llab-quvvatlash uchun tanlayman.</p>
-        </div>
-        <div class="capability-list">
-          {capabilities.map(({ number, title, detail }) => (
-            <article class="capability">
-              <span>{number}</span>
-              <h3>{title}</h3>
-              <p>{detail}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section class="work shell" id="work" aria-labelledby="work-title">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">// SELECTED DEPLOYMENTS</p>
-            <h2 id="work-title">Ishlaydigan mahsulotlar.</h2>
-          </div>
-          <p>Product fikrlash, arxitektura, development, deploy va qo‘llab-quvvatlash — bitta to‘liq ownership.</p>
-        </div>
-        <div class="project-list">
-          {projects.map((project, index) => (
-            <a class="project" href={project.url} target="_blank" rel="noopener noreferrer">
-              <span class="project-index">0{index + 1}</span>
-              <div>
-                <p>{project.type}</p>
-                <h3>{project.name}</h3>
-                <span class="project-description">{project.description}</span>
-              </div>
-              <ul class="project-stack" aria-label={`${project.name} texnologiyalari`}>
-                {project.stack.map((item) => <li>{item}</li>)}
-              </ul>
-              <span class="project-arrow" aria-hidden="true">↗</span>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <section class="experience" id="experience" aria-labelledby="experience-title">
-        <div class="shell experience-grid">
-          <div class="experience-intro">
-            <p class="eyebrow">// WORKING LOG</p>
-            <h2 id="experience-title">Tizim qurish, tezlashtirish va odamlarni o‘stirish.</h2>
-            <p>Telekom, ta’lim, remote product development va mustaqil mahsulotlarda backend’dan infra’gacha keng mas’uliyat.</p>
-          </div>
-          <ol class="timeline">
-            {experience.map((item) => (
-              <li>
-                <article>
-                  <time>{item.period}</time>
-                  <div>
-                    <h3>{item.title}</h3>
-                    <p class="company">{item.company}</p>
-                    <p>{item.detail}</p>
-                  </div>
-                </article>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <section class="knowledge shell" aria-labelledby="knowledge-title">
-        <article>
-          <p class="eyebrow">// KNOWLEDGE MULTIPLIES</p>
-          <h2 id="knowledge-title">Kuchli muhandis bilimini saqlamaydi — ko‘paytiradi.</h2>
-          <p>Najot Ta’lim’da Node.js backend, database, deployment va real loyiha madaniyatini o‘rgataman.</p>
-          <a href="https://t.me/thelazy_programmer" target="_blank" rel="noopener noreferrer">The Lazy Programmer blogi <span aria-hidden="true">↗</span></a>
-        </article>
-        <aside>
-          <span>2019 — 2023</span>
-          <h3>Farg‘ona Politexnika Instituti</h3>
-          <p>Mechanical Engineering bakalavri. Tizimli tahlil va real cheklovlar ostida yechim topish asoslari.</p>
-        </aside>
-      </section>
-    </main>
-
-    <footer class="site-footer" id="contact">
-      <div class="shell contact-card">
-        <div>
-          <p class="eyebrow">// NEXT USEFUL THING</p>
-          <h2>Murakkab vazifani birga yechamiz.</h2>
-          <p>Full-time rol, freelance loyiha, konsalting, mentorlik yoki texnik hamkorlik — vazifani tushunib, eng to‘g‘ri yo‘lni muhokama qilamiz.</p>
-        </div>
-        <address>
-          <a class="button button-primary" href="https://t.me/Xamidullo_Xudoyberdiyev" target="_blank" rel="noopener noreferrer">Telegram orqali yozing <span aria-hidden="true">→</span></a>
-          <a href="mailto:khkhamidullo@gmail.com">khkhamidullo@gmail.com</a>
-          <a href="tel:+998946110066">+998 94 611 00 66</a>
-          <a href="https://www.linkedin.com/in/xam1dullo/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a href="https://github.com/xam1dullo" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <span>Toshkent, O‘zbekiston</span>
-        </address>
-      </div>
-    </footer>
-  </body>
-</html>
+    // Initialize interactive Canvas, GSAP Motion, i18n, and Spotlight
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bootstrap);
+    } else {
+      bootstrap();
+    }
+  </script>
+</BaseLayout>

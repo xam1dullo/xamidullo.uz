@@ -1,0 +1,52 @@
+---
+import { defaultContent } from "../data/portfolio";
+const { metrics, metricsHeading } = defaultContent;
+---
+
+<section class="metrics reveal-on-scroll" aria-labelledby="metrics-title">
+  <div class="shell">
+    <div class="section-label">
+      <p class="eyebrow" data-i18n="metricsHeading.eyebrow">{metricsHeading.eyebrow}</p>
+      <h2 id="metrics-title" data-i18n="metricsHeading.title">{metricsHeading.title}</h2>
+      <p class="metrics-summary" data-i18n="metricsHeading.summary">{metricsHeading.summary}</p>
+    </div>
+    <dl class="metrics-list">
+      {
+        metrics.map(({ value, suffix, label, detail, numericTarget }, idx) => (
+          <div class="metric" data-target={numericTarget}>
+            <span class="metric-idx" aria-hidden="true">0{idx + 1}</span>
+            <dt>{label}</dt>
+            <dd>
+              <strong>
+                <span class="metric-number">{numericTarget}</span>
+                {value.includes("+") && "+"}
+                {value.includes("×") && "×"}
+                {value.includes("%") && "%"}
+              </strong>
+              {suffix && <span class="metric-suffix">{suffix}</span>}
+            </dd>
+            <p>{detail}</p>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .metrics-summary {
+    margin: 1rem 0 0;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    max-inline-size: 26rem;
+  }
+
+  .metric-idx {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--signal-dim);
+    letter-spacing: 0.08em;
+  }
+</style>

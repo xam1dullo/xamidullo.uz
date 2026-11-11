@@ -1,0 +1,114 @@
+---
+import { defaultContent } from "../data/portfolio";
+const { telemetry } = defaultContent;
+---
+
+<div class="telemetry-bar shell reveal-on-scroll" aria-label="Tizim ma’lumotlari">
+  <div class="telemetry-inner">
+    <div class="telemetry-item tele-status">
+      <span class="tele-dot" aria-hidden="true"></span>
+      <span class="tele-label" data-i18n="telemetry.status">{telemetry.status}</span>
+    </div>
+
+    <div class="telemetry-item">
+      <span class="tele-key">LOC:</span>
+      <span class="tele-val" data-i18n="telemetry.uptime">{telemetry.uptime}</span>
+      <time class="tele-clock" id="tashkent-clock" aria-label="Toshkent vaqti">--:--:--</time>
+    </div>
+
+    <div class="telemetry-item">
+      <span class="tele-key">STACK:</span>
+      <span class="tele-val" data-i18n="telemetry.latency">{telemetry.latency}</span>
+    </div>
+
+    <div class="telemetry-item">
+      <span class="tele-key">ENGINE:</span>
+      <span class="tele-val" data-i18n="telemetry.build">{telemetry.build}</span>
+    </div>
+
+    <div class="telemetry-item">
+      <span class="tele-key">RELEASE:</span>
+      <span class="tele-val" data-i18n="telemetry.version">{telemetry.version}</span>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const clockEl = document.getElementById("tashkent-clock");
+    if (!clockEl) return;
+    const fmt = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Tashkent",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+    const tick = () => {
+      clockEl.textContent = fmt.format(new Date());
+    };
+    tick();
+    setInterval(tick, 1000);
+  })();
+</script>
+
+<style>
+  .telemetry-bar {
+    margin-block: clamp(2rem, 5vw, 4rem) 1rem;
+  }
+
+  .telemetry-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.4rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    box-shadow: inset 0 1px 0 var(--border-inset);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+  }
+
+  .telemetry-item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .tele-status {
+    color: var(--signal);
+  }
+
+  .tele-dot {
+    inline-size: 0.45rem;
+    block-size: 0.45rem;
+    border-radius: 50%;
+    background: var(--signal);
+  }
+
+  .tele-key {
+    color: var(--ink-faint);
+  }
+
+  .tele-val {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .tele-clock {
+    color: var(--signal-dim);
+    font-weight: 600;
+  }
+
+  @media (max-width: 44rem) {
+    .telemetry-inner {
+      justify-content: flex-start;
+      gap: 0.75rem 1.25rem;
+    }
+  }
+</style>

@@ -1,0 +1,239 @@
+---
+import { defaultContent } from "../data/portfolio";
+
+interface Props {
+  variant?: "home" | "page";
+  currentPath?: string;
+}
+
+const { variant = "home", currentPath = "/" } = Astro.props;
+const { nav } = defaultContent;
+const isHome = variant === "home";
+const isBlog = currentPath.startsWith("/blog");
+---
+
+<header class="site-header">
+  <div class="shell header-content">
+    <a class="brand-link" href="/" aria-label="Xamidullo Xudoyberdiyev · Bosh sahifa">
+      <span class="brand-monogram" aria-hidden="true">XX</span>
+      <span class="brand-meta">
+        <strong class="brand-name">Xamidullo Xudoyberdiyev</strong>
+        <span class="brand-tag">XH<span>/</span>SYSTEMS · UCELL</span>
+      </span>
+    </a>
+
+    <nav aria-label="Asosiy navigatsiya">
+      <ul class="nav-list">
+        <li><a href="/#about" data-i18n="nav.about">{nav.about}</a></li>
+        <li><a href="/#work" data-i18n="nav.work">{nav.work}</a></li>
+        <li><a href="/#experience" data-i18n="nav.experience">{nav.experience}</a></li>
+        <li>
+          <a href="/blog/" data-i18n="nav.blog" aria-current={isBlog ? "page" : undefined}>
+            {nav.blog}
+          </a>
+        </li>
+        <li><a href="/#contact" data-i18n="nav.contact">{nav.contact}</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <button
+        type="button"
+        class="theme-toggle-btn"
+        id="theme-toggle-btn"
+        aria-label="Qorong‘i rejimga o‘tish"
+        aria-pressed="false"
+      >
+        <svg
+          class="icon-moon"
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          width="16"
+          height="16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+        </svg>
+        <svg
+          class="icon-sun"
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          width="16"
+          height="16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+        </svg>
+      </button>
+
+      {
+        isHome && (
+          <button
+            type="button"
+            class="lang-toggle-btn"
+            id="lang-toggle-btn"
+            aria-label="Switch to English"
+          >
+            <svg
+              class="lang-icon"
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span class="lang-label" id="lang-current-label">EN</span>
+          </button>
+        )
+      }
+
+      <button
+        type="button"
+        class="terminal-trigger"
+        id="open-terminal-btn"
+        aria-label="Terminal ochish (Ctrl+K)"
+      >
+        <span class="cmd-key">⌘K</span>
+        <span class="terminal-label">CLI</span>
+      </button>
+
+      <span class="availability" title={nav.availability}>
+        <span aria-hidden="true"></span>
+        <span class="availability-text" data-i18n="nav.availability">{nav.availability}</span>
+      </span>
+    </div>
+  </div>
+</header>
+
+<style>
+  .brand-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-block-size: 2.75rem;
+    text-decoration: none;
+  }
+
+  .brand-monogram {
+    display: grid;
+    place-items: center;
+    inline-size: 2.35rem;
+    block-size: 2.35rem;
+    border-radius: 0.6rem;
+    background: linear-gradient(
+      135deg,
+      rgb(var(--signal-rgb) / 0.22),
+      rgb(var(--accent-violet-rgb) / 0.16)
+    );
+    border: 1px solid rgb(var(--signal-rgb) / 0.45);
+    box-shadow: inset 0 1px 0 var(--border-inset);
+    color: var(--signal-hover);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  .brand-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+  }
+
+  .brand-name {
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  .brand-tag {
+    color: var(--ink-faint);
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  .brand-tag span {
+    color: var(--signal);
+    margin-inline: 0.15rem;
+  }
+
+  .lang-toggle-btn,
+  .theme-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    padding: 0.4rem 0.75rem;
+    background: transparent;
+    border: 1px solid var(--line-bright);
+    border-radius: 0.5rem;
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, transform 120ms ease;
+  }
+
+  .lang-toggle-btn:hover,
+  .theme-toggle-btn:hover {
+    background: rgb(var(--signal-rgb) / 0.08);
+    border-color: var(--signal);
+    color: var(--signal);
+  }
+
+  .lang-toggle-btn:active,
+  .theme-toggle-btn:active {
+    transform: scale(0.98);
+  }
+
+  .theme-toggle-btn {
+    inline-size: 2.75rem;
+    padding: 0;
+  }
+
+  .theme-toggle-btn .icon-sun {
+    display: none;
+  }
+
+  :global(:root[data-theme="dark"]) .theme-toggle-btn .icon-sun {
+    display: block;
+  }
+
+  :global(:root[data-theme="dark"]) .theme-toggle-btn .icon-moon {
+    display: none;
+  }
+
+  .lang-icon {
+    color: var(--signal-dim);
+  }
+
+  @media (max-width: 72rem) {
+    .availability-text {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,671 @@
+---
+import { render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Contact from "../../components/Contact.astro";
+import {
+  SITE_URL,
+  formatDate,
+  getPublishedPosts,
+  isoDate,
+  readingMinutes,
+  type BlogPost,
+} from "../../lib/blog";
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post, index) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      newer: index > 0 ? posts[index - 1] : undefined,
+      older: index < posts.length - 1 ? posts[index + 1] : undefined,
+      related: posts
+        .filter((other) => other.id !== post.id && other.data.tags.some((tag) => post.data.tags.includes(tag)))
+        .slice(0, 2),
+    },
+  }));
+}
+
+interface Props {
+  post: BlogPost;
+  newer?: BlogPost;
+  older?: BlogPost;
+  related: BlogPost[];
+}
+
+const { post, newer, older, related } = Astro.props;
+const { Content, headings } = await render(post);
+const minutes = readingMinutes(post.body);
+const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const url = `${SITE_URL}/blog/${post.id}/`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  dateModified: (post.data.updatedDate ?? post.data.pubDate).toISOString(),
+  inLanguage: "uz",
+  keywords: post.data.tags.join(", "),
+  mainEntityOfPage: url,
+  author: { "@type": "Person", name: "Xamidullo Xudoyberdiyev", url: `${SITE_URL}/` },
+};
+---
+
+<BaseLayout
+  title={`${post.data.title} · Xamidullo Xudoyberdiyev`}
+  description={post.data.description}
+  path={`/blog/${post.id}/`}
+  ogType="article"
+  jsonLd={jsonLd}
+  publishedTime={post.data.pubDate.toISOString()}
+  modifiedTime={(post.data.updatedDate ?? post.data.pubDate).toISOString()}
+  tags={post.data.tags}
+>
+  <div class="read-progress" id="read-progress" aria-hidden="true"></div>
+
+  <main id="main" class="post shell">
+    <a class="back-link" href="/blog/"><span aria-hidden="true">←</span> Barcha maqolalar</a>
+
+    <header class="post-header">
+      <ul class="post-tags" aria-label="Teglar">
+        {post.data.tags.map((tag) => <li><a href={`/blog/?tag=${encodeURIComponent(tag)}`}>{tag}</a></li>)}
+      </ul>
+      <h1>{post.data.title}</h1>
+      <p class="post-lead">{post.data.description}</p>
+      <p class="post-meta">
+        <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{minutes} daqiqa o‘qish</span>
+        {
+          post.data.updatedDate && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>
+                Yangilangan: <time datetime={isoDate(post.data.updatedDate)}>{formatDate(post.data.updatedDate)}</time>
+              </span>
+            </>
+          )
+        }
+        {post.data.draft && <span class="draft-badge">DRAFT</span>}
+      </p>
+    </header>
+
+    <div class="post-layout">
+      <article class="prose">
+        <Content />
+      </article>
+
+      {
+        toc.length > 1 && (
+          <aside class="toc" aria-label="Mundarija">
+            <p class="toc-title">// MUNDARIJA</p>
+            <ol>
+              {toc.map((heading) => (
+                <li class={`toc-depth-${heading.depth}`}>
+                  <a href={`#${heading.slug}`} data-toc-link={heading.slug}>
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </aside>
+        )
+      }
+    </div>
+
+    <nav class="post-nav" aria-label="Boshqa maqolalar">
+      {
+        older ? (
+          <a href={`/blog/${older.id}/`} rel="prev">
+            <span class="post-nav-label">← Oldingi</span>
+            <span class="post-nav-title">{older.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        newer ? (
+          <a href={`/blog/${newer.id}/`} rel="next" class="post-nav-next">
+            <span class="post-nav-label">Keyingi →</span>
+            <span class="post-nav-title">{newer.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+    </nav>
+
+    {
+      related.length > 0 && (
+        <section class="related" aria-labelledby="related-title">
+          <h2 id="related-title">O‘xshash maqolalar</h2>
+          <ul>
+            {related.map((item) => (
+              <li>
+                <a href={`/blog/${item.id}/`}>
+                  <span class="related-title">{item.data.title}</span>
+                  <span class="related-desc">{item.data.description}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </main>
+
+  <Contact />
+
+  <script>
+    // Reading progress bar
+    const bar = document.getElementById("read-progress");
+    const article = document.querySelector<HTMLElement>(".prose");
+
+    function updateProgress() {
+      if (!bar || !article) return;
+      const rect = article.getBoundingClientRect();
+      const total = rect.height - window.innerHeight * 0.6;
+      const passed = Math.min(Math.max(-rect.top + window.innerHeight * 0.2, 0), total);
+      bar.style.transform = `scaleX(${total > 0 ? passed / total : 1})`;
+    }
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    updateProgress();
+
+    // Table of contents scrollspy
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"));
+    if (links.length > 0 && "IntersectionObserver" in window) {
+      const byId = new Map(links.map((link) => [link.dataset.tocLink ?? "", link]));
+      const headings = Array.from(byId.keys())
+        .map((id) => document.getElementById(id))
+        .filter((el): el is HTMLElement => el !== null);
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            links.forEach((link) => link.removeAttribute("aria-current"));
+            byId.get(entry.target.id)?.setAttribute("aria-current", "true");
+          }
+        },
+        { rootMargin: "-80px 0px -70% 0px" }
+      );
+      headings.forEach((heading) => observer.observe(heading));
+    }
+
+    // Copy buttons for code blocks
+    document.querySelectorAll<HTMLPreElement>(".prose pre").forEach((pre) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy-code";
+      button.textContent = "Nusxa";
+      button.setAttribute("aria-label", "Kodni nusxalash");
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(pre.innerText);
+          button.textContent = "Nusxalandi";
+        } catch {
+          button.textContent = "Xato";
+        }
+        window.setTimeout(() => (button.textContent = "Nusxa"), 1800);
+      });
+      const wrapper = document.createElement("div");
+      wrapper.className = "code-block";
+      pre.replaceWith(wrapper);
+      wrapper.append(pre, button);
+    });
+  </script>
+</BaseLayout>
+
+<style>
+  .read-progress {
+    position: fixed;
+    z-index: 6;
+    inset: 0 0 auto 0;
+    block-size: 3px;
+    background: var(--signal);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .post {
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-block-size: 2.75rem;
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    transition: color 150ms ease;
+  }
+
+  .back-link:hover {
+    color: var(--signal);
+  }
+
+  .post-header {
+    max-inline-size: 52rem;
+    padding-block: clamp(1.5rem, 4vw, 3rem) clamp(2rem, 4vw, 3rem);
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    padding: 0;
+    margin: 0 0 1.4rem;
+    list-style: none;
+  }
+
+  .post-tags a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.25rem;
+    padding: 0.25rem 0.8rem;
+    border: 1px solid var(--line-bright);
+    border-radius: 999px;
+    color: var(--signal-dim);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+  }
+
+  .post-tags a:hover {
+    background: var(--signal);
+    border-color: var(--signal);
+    color: var(--on-accent);
+  }
+
+  .post-header h1 {
+    max-inline-size: none;
+    margin: 0 0 1.2rem;
+    color: var(--ink);
+    font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.08;
+  }
+
+  .post-lead {
+    margin: 0 0 1.5rem;
+    color: var(--ink-soft);
+    font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+    text-wrap: pretty;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    margin: 0;
+    color: var(--ink-faint);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .draft-badge {
+    padding: 0 0.5rem;
+    border: 1px solid var(--danger);
+    border-radius: 999px;
+    color: var(--danger);
+  }
+
+  .post-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 46rem) minmax(13rem, 17rem);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: start;
+    justify-content: space-between;
+    border-block-start: 1px solid var(--line);
+    padding-block-start: clamp(2rem, 4vw, 3rem);
+  }
+
+  .toc {
+    position: sticky;
+    inset-block-start: 6rem;
+    order: 2;
+    max-block-size: calc(100dvh - 8rem);
+    overflow-y: auto;
+  }
+
+  .toc-title {
+    margin: 0 0 0.9rem;
+    color: var(--signal-dim);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+  }
+
+  .toc ol {
+    padding: 0;
+    margin: 0;
+    border-inline-start: 1px solid var(--line);
+    list-style: none;
+  }
+
+  .toc a {
+    display: block;
+    padding: 0.35rem 0 0.35rem 1rem;
+    margin-inline-start: -1px;
+    border-inline-start: 2px solid transparent;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .toc .toc-depth-3 a {
+    padding-inline-start: 2rem;
+    font-size: 0.8rem;
+  }
+
+  .toc a:hover {
+    color: var(--ink);
+  }
+
+  .toc a[aria-current="true"] {
+    border-inline-start-color: var(--signal);
+    color: var(--signal);
+  }
+
+  .post-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-block-start: clamp(3rem, 6vw, 5rem);
+  }
+
+  .post-nav a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    transition: border-color 160ms ease, background-color 160ms ease;
+  }
+
+  .post-nav a:hover {
+    border-color: var(--signal);
+    background: rgb(var(--signal-rgb) / 0.05);
+  }
+
+  .post-nav-next {
+    text-align: end;
+  }
+
+  .post-nav-label {
+    color: var(--ink-faint);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+  }
+
+  .post-nav-title {
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    line-height: 1.25;
+  }
+
+  .related {
+    margin-block-start: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .related h2 {
+    margin: 0 0 1rem;
+    color: var(--ink);
+    font-size: 1.5rem;
+    font-weight: 450;
+  }
+
+  .related ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .related a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    block-size: 100%;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+  }
+
+  .related a:hover {
+    border-color: var(--signal);
+  }
+
+  .related-title {
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    line-height: 1.25;
+  }
+
+  .related-desc {
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 62rem) {
+    .post-layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .toc {
+      position: static;
+      order: -1;
+      max-block-size: none;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+    }
+
+    .post-nav {
+      grid-template-columns: 1fr;
+    }
+
+    .post-nav-next {
+      text-align: start;
+    }
+  }
+</style>
+
+<style is:global>
+  .prose {
+    color: var(--ink);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    min-inline-size: 0;
+  }
+
+  .prose > * + * {
+    margin-block-start: 1.25rem;
+  }
+
+  .prose h2,
+  .prose h3 {
+    scroll-margin-block-start: 6rem;
+    color: var(--ink);
+    font-weight: 450;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .prose h2 {
+    margin-block: 3rem 0.5rem;
+    font-size: clamp(1.7rem, 3vw, 2.2rem);
+  }
+
+  .prose h3 {
+    margin-block: 2rem 0.25rem;
+    font-size: 1.4rem;
+  }
+
+  .prose p,
+  .prose li {
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+
+  .prose strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .prose a {
+    color: var(--signal);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+  }
+
+  .prose a:hover {
+    color: var(--signal-hover);
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-inline-start: 1.4rem;
+  }
+
+  .prose li + li {
+    margin-block-start: 0.4rem;
+  }
+
+  .prose li::marker {
+    color: var(--signal-dim);
+  }
+
+  .prose blockquote {
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    margin-inline: 0;
+    border-inline-start: 3px solid var(--signal);
+  }
+
+  .prose blockquote p {
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.2rem;
+  }
+
+  .prose hr {
+    margin-block: 2.5rem;
+    border: 0;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .prose :not(pre) > code {
+    padding: 0.1em 0.4em;
+    border: 1px solid var(--line);
+    border-radius: 0.375rem;
+    background: var(--surface-raised);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 0.88em;
+  }
+
+  .prose pre {
+    padding: 1.15rem 1.3rem;
+    overflow-x: auto;
+    border: 1px solid var(--line-bright);
+    border-radius: 0.85rem;
+    background: var(--shiki-dark-bg, var(--surface));
+    box-shadow: inset 0 1px 0 var(--border-inset);
+    color: var(--shiki-dark);
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    line-height: 1.65;
+  }
+
+  .prose pre span {
+    color: var(--shiki-dark);
+  }
+
+  :root[data-theme="light"] .prose pre {
+    background: var(--shiki-light-bg, var(--surface));
+    color: var(--shiki-light);
+  }
+
+  :root[data-theme="light"] .prose pre span {
+    color: var(--shiki-light);
+  }
+
+  .prose pre code {
+    display: block;
+    inline-size: max-content;
+    min-inline-size: 100%;
+  }
+
+  .prose .code-block {
+    position: relative;
+  }
+
+  .prose .copy-code {
+    position: absolute;
+    inset-block-start: 0.6rem;
+    inset-inline-end: 0.6rem;
+    min-block-size: 2.25rem;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--line-bright);
+    border-radius: 0.375rem;
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: border-color 150ms ease, color 150ms ease, transform 120ms ease;
+  }
+
+  .prose .copy-code:hover {
+    border-color: var(--signal);
+    color: var(--signal);
+  }
+
+  .prose .copy-code:active {
+    transform: scale(0.97);
+  }
+
+  .prose table {
+    inline-size: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+
+  .prose th,
+  .prose td {
+    padding: 0.6rem 0.75rem;
+    border-block-end: 1px solid var(--line);
+    text-align: start;
+  }
+
+  .prose th {
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+  }
+
+  .prose img {
+    max-inline-size: 100%;
+    border-radius: 0.75rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .read-progress {
+      transition: none;
+    }
+  }
+</style>

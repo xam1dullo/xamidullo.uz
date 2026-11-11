@@ -1,0 +1,342 @@
+---
+import { defaultContent } from "../data/portfolio";
+const { projects, drawer } = defaultContent;
+---
+
+<dialog id="project-drawer" class="project-drawer" aria-labelledby="drawer-title">
+  <div class="drawer-content">
+    <div class="drawer-header">
+      <div>
+        <p class="eyebrow" id="drawer-type" data-i18n="drawer.caseStudy">{drawer.caseStudy}</p>
+        <h2 id="drawer-title">Loyiha Arxitekturasi</h2>
+      </div>
+      <button type="button" class="drawer-close" id="drawer-close-btn" aria-label="Yopish">
+        ✕
+      </button>
+    </div>
+
+    <div class="drawer-body">
+      <div class="drawer-section">
+        <h3 data-i18n="drawer.problem">{drawer.problem}</h3>
+        <p id="drawer-problem"></p>
+      </div>
+
+      <div class="drawer-section">
+        <h3 data-i18n="drawer.solution">{drawer.solution}</h3>
+        <p id="drawer-solution"></p>
+      </div>
+
+      <div class="drawer-section">
+        <h3 data-i18n="drawer.highlights">{drawer.highlights}</h3>
+        <ul id="drawer-highlights" class="drawer-highlights"></ul>
+      </div>
+
+      <div class="drawer-section">
+        <h3 data-i18n="drawer.metrics">{drawer.metrics}</h3>
+        <div id="drawer-metrics" class="drawer-metrics-grid"></div>
+      </div>
+
+      <div class="drawer-section">
+        <h3 data-i18n="drawer.topology">{drawer.topology}</h3>
+        <div id="drawer-diagram" class="drawer-diagram-nodes"></div>
+      </div>
+    </div>
+
+    <div class="drawer-footer">
+      <a id="drawer-live-link" href="#" target="_blank" rel="noopener noreferrer" class="button button-primary">
+        <span data-i18n="drawer.liveBtn">{drawer.liveBtn}</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<script is:inline id="projects-data" type="application/json" set:html={JSON.stringify(projects)}></script>
+
+<script is:inline>
+  const drawer = document.getElementById("project-drawer");
+  const closeBtn = document.getElementById("drawer-close-btn");
+
+  const drawerType = document.getElementById("drawer-type");
+  const drawerTitle = document.getElementById("drawer-title");
+  const drawerProblem = document.getElementById("drawer-problem");
+  const drawerSolution = document.getElementById("drawer-solution");
+  const drawerHighlights = document.getElementById("drawer-highlights");
+  const drawerMetrics = document.getElementById("drawer-metrics");
+  const drawerDiagram = document.getElementById("drawer-diagram");
+  const drawerLiveLink = document.getElementById("drawer-live-link");
+
+  function getActiveProjects() {
+    const projectsDataEl = document.getElementById("projects-data");
+    return projectsDataEl ? JSON.parse(projectsDataEl.textContent || "[]") : [];
+  }
+
+  function openProjectDrawer(projectId) {
+    const projectsList = getActiveProjects();
+    const project = projectsList.find((p) => p.id === projectId);
+    if (!project || !project.architecture || !drawer) return;
+
+    drawerType.textContent = `// ${project.type.toUpperCase()}`;
+    drawerTitle.textContent = project.name;
+    drawerProblem.textContent = project.architecture.problem;
+    drawerSolution.textContent = project.architecture.solution;
+    drawerLiveLink.href = project.url;
+
+    // Highlights
+    drawerHighlights.innerHTML = project.architecture.highlights
+      .map((h) => `<li><span aria-hidden="true">✓</span> ${h}</li>`)
+      .join("");
+
+    // Metrics
+    drawerMetrics.innerHTML = project.architecture.metrics
+      .map(
+        (m) => `
+        <div class="drawer-metric-item">
+          <span class="m-val">${m.value}</span>
+          <span class="m-lbl">${m.label}</span>
+        </div>
+      `
+      )
+      .join("");
+
+    // Diagram nodes
+    drawerDiagram.innerHTML = project.architecture.diagramNodes
+      .map(
+        (node, idx, arr) => `
+        <div class="diagram-step">
+          <div class="node-box">
+            <span class="n-label">${node.label}</span>
+            <span class="n-role">${node.role}</span>
+          </div>
+          ${idx < arr.length - 1 ? '<span class="diagram-arrow">→</span>' : ""}
+        </div>
+      `
+      )
+      .join("");
+
+    drawer.showModal();
+  }
+
+  // Event delegation for opening drawer
+  document.addEventListener("click", (e) => {
+    const target = e.target;
+    if (target && target.closest("[data-open-drawer]")) {
+      const btn = target.closest("[data-open-drawer]");
+      const id = btn.getAttribute("data-open-drawer");
+      if (id) {
+        e.preventDefault();
+        openProjectDrawer(id);
+      }
+    }
+  });
+
+  closeBtn?.addEventListener("click", () => drawer?.close());
+
+  // Light dismiss on backdrop click
+  drawer?.addEventListener("click", (e) => {
+    const rect = drawer.getBoundingClientRect();
+    const isInDialog =
+      rect.top <= e.clientY &&
+      e.clientY <= rect.top + rect.height &&
+      rect.left <= e.clientX &&
+      e.clientX <= rect.left + rect.width;
+    if (!isInDialog) {
+      drawer.close();
+    }
+  });
+</script>
+
+<style>
+  .project-drawer {
+    position: fixed;
+    inset: 0 0 0 auto;
+    margin: 0;
+    max-inline-size: min(38rem, 100vw);
+    inline-size: 100%;
+    block-size: 100dvh;
+    max-block-size: 100dvh;
+    padding: 0;
+    background: var(--surface);
+    color: var(--ink);
+    border: none;
+    border-inline-start: 1px solid var(--line-bright);
+    box-shadow: -1.5rem 0 3.5rem rgb(var(--shadow-rgb) / 0.2);
+    overflow-y: auto;
+  }
+
+  .project-drawer::backdrop {
+    background: rgb(var(--shadow-rgb) / 0.5);
+    backdrop-filter: blur(6px);
+  }
+
+  .drawer-content {
+    display: flex;
+    flex-direction: column;
+    min-block-size: 100%;
+    padding: 2.25rem clamp(1.25rem, 4vw, 2.5rem);
+  }
+
+  .drawer-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-block-end: 1.5rem;
+    border-block-end: 1px solid var(--line);
+  }
+
+  .drawer-header h2 {
+    margin: 0.35rem 0 0;
+    font-size: 1.85rem;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+
+  .drawer-close {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    background: rgb(var(--signal-rgb) / 0.08);
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    color: var(--ink-soft);
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: var(--mono);
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 120ms ease;
+  }
+
+  .drawer-close:hover {
+    background: var(--signal);
+    border-color: var(--signal);
+    color: var(--on-accent);
+  }
+
+  .drawer-close:active {
+    transform: scale(0.97);
+  }
+
+  .drawer-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    padding-block: 1.75rem;
+  }
+
+  .drawer-section h3 {
+    margin: 0 0 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--signal-dim);
+    text-transform: uppercase;
+  }
+
+  .drawer-section p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .drawer-highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .drawer-highlights li {
+    display: flex;
+    gap: 0.65rem;
+    color: var(--ink);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .drawer-highlights li span {
+    color: var(--signal);
+    font-weight: bold;
+  }
+
+  .drawer-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .drawer-metric-item {
+    background: rgb(var(--signal-rgb) / 0.04);
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .drawer-metric-item .m-val {
+    color: var(--signal);
+    font-family: var(--mono);
+    font-size: 1.2rem;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+  }
+
+  .drawer-metric-item .m-lbl {
+    color: var(--ink-faint);
+    font-size: 0.72rem;
+    margin-block-start: 0.25rem;
+  }
+
+  .drawer-diagram-nodes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: rgb(var(--ink-rgb) / 0.03);
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+  }
+
+  .diagram-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .node-box {
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    background: var(--surface-raised);
+    border: 1px solid var(--line-bright);
+    font-family: var(--mono);
+  }
+
+  .node-box .n-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--signal);
+  }
+
+  .node-box .n-role {
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+  }
+
+  .diagram-arrow {
+    color: var(--signal-dim);
+    font-weight: bold;
+  }
+
+  .drawer-footer {
+    padding-block-start: 1.5rem;
+    border-block-start: 1px solid var(--line);
+  }
+</style>

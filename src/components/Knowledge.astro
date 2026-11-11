@@ -1,0 +1,242 @@
+---
+import { defaultContent } from "../data/portfolio";
+const { knowledge } = defaultContent;
+---
+
+<section class="knowledge-section shell reveal-on-scroll" aria-labelledby="knowledge-title">
+  <div class="knowledge">
+    <article class="mentor-panel">
+      <div>
+        <p class="eyebrow" data-i18n="knowledge.eyebrow">{knowledge.eyebrow}</p>
+        <h2 id="knowledge-title" data-i18n="knowledge.title">{knowledge.title}</h2>
+        <p data-i18n="knowledge.summary">{knowledge.summary}</p>
+      </div>
+
+      <div class="mentor-footer">
+        <div class="mentor-badge">
+          <strong data-i18n="knowledge.mentorOrg">{knowledge.mentorOrg}</strong>
+          <span data-i18n="knowledge.mentorRole">{knowledge.mentorRole}</span>
+        </div>
+        <a
+          class="mentor-link"
+          href="https://t.me/thelazy_programmer"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span data-i18n="knowledge.blogLink">{knowledge.blogLink}</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </article>
+
+    <aside class="edu-panel">
+      <div class="edu-top">
+        <span class="edu-kicker" data-i18n="knowledge.eduLabel">{knowledge.eduLabel}</span>
+        <span class="edu-years" data-i18n="knowledge.eduYears">{knowledge.eduYears}</span>
+      </div>
+      <div>
+        <h3 data-i18n="knowledge.eduTitle">{knowledge.eduTitle}</h3>
+        <p class="edu-degree" data-i18n="knowledge.eduDegree">{knowledge.eduDegree}</p>
+        <p data-i18n="knowledge.eduSummary">{knowledge.eduSummary}</p>
+      </div>
+    </aside>
+  </div>
+
+  <div class="community-channels">
+    <a
+      class="channel-card"
+      href="https://t.me/thelazy_programmer"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <div class="channel-top">
+        <span class="channel-tag">// TELEGRAM BLOG · @thelazy_programmer</span>
+        <span class="channel-arrow" aria-hidden="true">↗</span>
+      </div>
+      <h3>The Lazy Programmer</h3>
+      <p data-i18n="knowledge.blogDesc">{knowledge.blogDesc}</p>
+    </a>
+
+    <a
+      class="channel-card"
+      href="https://www.linkedin.com/posts/multiaki_opentowork-activity-7158510381131325441-s5k0"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <div class="channel-top">
+        <span class="channel-tag">// LINKEDIN · PROFESSIONAL POST</span>
+        <span class="channel-arrow" aria-hidden="true">↗</span>
+      </div>
+      <h3 data-i18n="knowledge.linkedinTitle">{knowledge.linkedinTitle}</h3>
+      <p data-i18n="knowledge.linkedinDesc">{knowledge.linkedinDesc}</p>
+    </a>
+  </div>
+</section>
+
+<style>
+  .knowledge-section {
+    padding-block: clamp(5rem, 10vw, 9rem);
+  }
+
+  .knowledge {
+    padding-block: 0;
+  }
+
+  .mentor-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2.5rem;
+    background: var(--surface);
+  }
+
+  .mentor-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block-start: 1.5rem;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .mentor-badge {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .mentor-badge strong {
+    color: var(--ink);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .mentor-badge span {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--signal-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .mentor-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-block-size: 2.75rem;
+    padding: 0.55rem 0.95rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--line-bright);
+    background: rgb(var(--signal-rgb) / 0.06);
+    color: var(--signal);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 120ms ease;
+  }
+
+  .mentor-link:hover {
+    background: var(--signal);
+    color: var(--on-accent);
+    border-color: var(--signal);
+  }
+
+  .mentor-link:active {
+    transform: scale(0.98);
+  }
+
+  .edu-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .edu-kicker,
+  .edu-years {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--signal-dim);
+  }
+
+  .edu-degree {
+    margin: 0.45rem 0 0 !important;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--signal) !important;
+  }
+
+  .community-channels {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    margin-block-start: 1.25rem;
+  }
+
+  .channel-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: clamp(1.5rem, 3.5vw, 2.25rem);
+    border-radius: 1.25rem;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    transition: border-color 180ms ease, transform 180ms ease, background-color 180ms ease;
+  }
+
+  .channel-card:hover {
+    border-color: var(--signal);
+    background: rgb(var(--signal-rgb) / 0.05);
+    transform: translateY(-0.18rem);
+  }
+
+  .channel-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .channel-tag {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--signal-dim);
+  }
+
+  .channel-arrow {
+    color: var(--ink-faint);
+    font-size: 1.05rem;
+    transition: color 180ms ease, transform 180ms ease;
+  }
+
+  .channel-card:hover .channel-arrow {
+    color: var(--signal);
+    transform: translate(0.18rem, -0.18rem);
+  }
+
+  .channel-card h3 {
+    margin: 0.25rem 0 0;
+    color: var(--ink);
+    font-size: 1.45rem;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+  }
+
+  .channel-card p {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 44rem) {
+    .community-channels {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

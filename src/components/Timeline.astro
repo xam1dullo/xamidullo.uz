@@ -1,0 +1,125 @@
+---
+import { defaultContent } from "../data/portfolio";
+const { experience, experienceHeading } = defaultContent;
+---
+
+<section class="experience reveal-on-scroll" id="experience" aria-labelledby="experience-title">
+  <div class="shell experience-grid">
+    <div class="experience-intro">
+      <p class="eyebrow" data-i18n="experienceHeading.eyebrow">{experienceHeading.eyebrow}</p>
+      <h2 id="experience-title" data-i18n="experienceHeading.title">{experienceHeading.title}</h2>
+      <p data-i18n="experienceHeading.summary">
+        {experienceHeading.summary}
+      </p>
+    </div>
+
+    <ol class="timeline">
+      {
+        experience.map((item) => (
+          <li class="timeline-item">
+            <article>
+              <div class="timeline-time-col">
+                <span class="timeline-dot" aria-hidden="true"></span>
+                <time>{item.period}</time>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-role-head">
+                  <h3>{item.title}</h3>
+                  <p class="company">{item.company}</p>
+                </div>
+                <p class="timeline-detail">{item.detail}</p>
+
+                {item.outcomes && item.outcomes.length > 0 && (
+                  <ul class="timeline-outcomes" aria-label="Asosiy natijalar">
+                    {item.outcomes.map((outcome) => (
+                      <li>{outcome}</li>
+                    ))}
+                  </ul>
+                )}
+
+                {item.skills && item.skills.length > 0 && (
+                  <ul class="timeline-skills" aria-label="Ishlatilgan texnologiyalar">
+                    {item.skills.map((skill) => (
+                      <li>{skill}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .timeline-item {
+    position: relative;
+  }
+
+  .timeline-time-col {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .timeline-dot {
+    display: inline-block;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 50%;
+    background: var(--line-bright);
+    margin-block-start: 0.45rem;
+    transition: background-color 250ms ease, transform 250ms ease;
+  }
+
+  .timeline-active .timeline-dot {
+    background: var(--signal);
+    transform: scale(1.3);
+  }
+
+  .timeline-active h3 {
+    color: var(--signal);
+  }
+
+  .timeline-role-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .timeline-outcomes,
+  .timeline-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0;
+    margin: 0.85rem 0 0;
+    list-style: none;
+  }
+
+  .timeline-outcomes li {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.35rem;
+    background: rgb(var(--signal-rgb) / 0.1);
+    border: 1px solid var(--signal);
+    color: var(--signal);
+  }
+
+  .timeline-skills li {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: rgb(var(--signal-rgb) / 0.03);
+    border: 1px solid var(--line);
+    color: var(--ink-faint);
+  }
+</style>

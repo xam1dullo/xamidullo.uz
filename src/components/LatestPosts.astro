@@ -1,0 +1,56 @@
+---
+import { defaultContent } from "../data/portfolio";
+import { getPublishedPosts } from "../lib/blog";
+import PostCard from "./PostCard.astro";
+
+const { blogHeading } = defaultContent;
+const posts = (await getPublishedPosts()).slice(0, 3);
+---
+
+{
+  posts.length > 0 && (
+    <section class="blog-section shell reveal-on-scroll" id="blog" aria-labelledby="blog-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow" data-i18n="blogHeading.eyebrow">{blogHeading.eyebrow}</p>
+          <h2 id="blog-title" data-i18n="blogHeading.title">{blogHeading.title}</h2>
+        </div>
+        <p data-i18n="blogHeading.summary">{blogHeading.summary}</p>
+      </div>
+
+      <ul class="post-list">
+        {posts.map((post) => <PostCard post={post} />)}
+      </ul>
+
+      <a class="button button-secondary all-posts" href="/blog/">
+        <span data-i18n="blogHeading.allPosts">{blogHeading.allPosts}</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </section>
+  )
+}
+
+<style>
+  .blog-section {
+    padding-block: clamp(5rem, 10vw, 9rem);
+  }
+
+  .post-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .all-posts {
+    inline-size: fit-content;
+    margin-block-start: 2rem;
+  }
+
+  @media (max-width: 68rem) {
+    .post-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

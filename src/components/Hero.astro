@@ -1,0 +1,451 @@
+---
+import { defaultContent } from "../data/portfolio";
+import SystemMapCanvas from "./SystemMapCanvas.astro";
+
+const { hero } = defaultContent;
+const coreStack = ["TypeScript", "NestJS", "Go", "PostgreSQL", "Oracle SQL", "Redis", "Docker", "AWS"];
+---
+
+<section class="hero shell" id="top" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <div class="hero-identity-strip">
+      <p class="eyebrow" data-i18n="hero.eyebrow">{hero.eyebrow}</p>
+      <p class="hero-fullname" data-i18n="hero.fullName">{hero.fullName}</p>
+    </div>
+
+    <h1
+      id="hero-title"
+      data-i18n="hero.titleHtml"
+      data-i18n-html="true"
+      set:html={hero.titleHtml}
+    />
+
+    <p class="hero-summary" data-i18n="hero.summary">
+      {hero.summary}
+    </p>
+
+    <div class="hero-actions">
+      <a
+        class="button button-primary button-magnetic"
+        href="https://t.me/Xamidullo_Xudoyberdiyev"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span data-i18n="hero.telegramCta">{hero.telegramCta}</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+      <a class="button button-secondary button-magnetic" href="#work">
+        <span data-i18n="hero.worksCta">{hero.worksCta}</span>
+        <span aria-hidden="true">↓</span>
+      </a>
+      <button type="button" class="button button-terminal button-magnetic" id="hero-terminal-btn">
+        <span class="terminal-icon" aria-hidden="true">›_</span>
+        <span data-i18n="hero.cliCta">{hero.cliCta}</span>
+      </button>
+    </div>
+
+    <div class="hero-stack-bar" aria-label="Asosiy texnologiyalar">
+      <span class="stack-bar-label">// CORE STACK</span>
+      <ul class="stack-pill-list">
+        {coreStack.map((tech) => <li>{tech}</li>)}
+      </ul>
+    </div>
+
+    <ul class="hero-quick-links" aria-label="Professional profillar">
+      <li>
+        <a href="https://github.com/xam1dullo" target="_blank" rel="noopener noreferrer">
+          GitHub <span>/xam1dullo</span> ↗
+        </a>
+      </li>
+      <li>
+        <a href="https://www.linkedin.com/in/xam1dullo/" target="_blank" rel="noopener noreferrer">
+          LinkedIn <span>/in/xam1dullo</span> ↗
+        </a>
+      </li>
+      <li>
+        <a href="https://t.me/thelazy_programmer" target="_blank" rel="noopener noreferrer">
+          Telegram Blog <span>@thelazy_programmer</span> ↗
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="hero-graphic">
+    <div class="engineer-dossier bento-card">
+      <div class="dossier-window-bar" aria-hidden="true">
+        <div class="win-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span class="win-title">xh-systems://topology-mesh</span>
+        <span class="win-badge">● LIVE</span>
+      </div>
+
+      <div class="dossier-header">
+        <div class="portrait-wrap">
+          <img
+            class="dossier-portrait"
+            src="https://avatars.githubusercontent.com/u/74096482?v=4"
+            alt="Xamidullo Xudoyberdiyev portreti"
+            width="120"
+            height="120"
+            fetchpriority="high"
+            decoding="async"
+          />
+          <span class="portrait-status-dot" aria-hidden="true"></span>
+        </div>
+        <div class="dossier-info">
+          <span class="dossier-label" data-i18n="hero.roleLabel">{hero.roleLabel}</span>
+          <strong class="dossier-role" data-i18n="hero.roleValue">{hero.roleValue}</strong>
+          <div class="dossier-chips">
+            <span class="dossier-badge" data-i18n="hero.mottoBadge">{hero.mottoBadge}</span>
+            <span class="dossier-chip">Najot Ta’lim · Mentor</span>
+            <span class="dossier-chip">B.S. Engineering</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dossier-canvas-wrap">
+        <SystemMapCanvas />
+      </div>
+
+      <div class="dossier-hud-footer" aria-hidden="true">
+        <div class="hud-cell">
+          <span class="hud-k">LATENCY</span>
+          <strong class="hud-v">p95 &lt; 45ms</strong>
+        </div>
+        <div class="hud-cell">
+          <span class="hud-k">THROUGHPUT</span>
+          <strong class="hud-v">3× FASTER</strong>
+        </div>
+        <div class="hud-cell">
+          <span class="hud-k">MEMORY</span>
+          <strong class="hud-v">-90% HEAP</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-identity-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-fullname {
+    margin: 0;
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+
+  .hero-stack-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    margin-block-start: 2rem;
+    padding-block-start: 1.4rem;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .stack-bar-label {
+    color: var(--ink-faint);
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+  }
+
+  .stack-pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .stack-pill-list li {
+    padding: 0.22rem 0.6rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--line-bright);
+    background: rgb(var(--surface-raised-rgb) / 0.65);
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+  }
+
+  .hero-quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    padding: 1rem 0 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .hero-quick-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-block-size: 2.25rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink);
+    font-weight: 600;
+    transition: color 150ms ease;
+  }
+
+  .hero-quick-links a span {
+    color: var(--ink-faint);
+    font-weight: 400;
+  }
+
+  .hero-quick-links a:hover {
+    color: var(--signal-hover);
+  }
+
+  .hero-quick-links a:hover span {
+    color: var(--signal);
+  }
+
+  .hero-graphic {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: stretch;
+  }
+
+  .engineer-dossier {
+    --mouse-x: -9999px;
+    --mouse-y: -9999px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    border-radius: 1.35rem;
+    border: 1px solid var(--line-bright);
+    background: linear-gradient(
+      180deg,
+      rgb(var(--surface-raised-rgb) / 0.8),
+      rgb(var(--surface-rgb) / 0.95)
+    );
+    box-shadow:
+      inset 0 1px 0 var(--border-inset),
+      0 1.75rem 4rem -1.25rem rgb(var(--shadow-rgb) / 0.65),
+      0 0 3.5rem -1rem rgb(var(--signal-rgb) / 0.18);
+    overflow: hidden;
+  }
+
+  .dossier-window-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 1.15rem;
+    border-block-end: 1px solid var(--line);
+    background: rgb(var(--canvas-rgb) / 0.55);
+    font-family: var(--mono);
+    font-size: 0.68rem;
+  }
+
+  .win-dots {
+    display: flex;
+    gap: 0.38rem;
+  }
+
+  .win-dots span {
+    inline-size: 0.55rem;
+    block-size: 0.55rem;
+    border-radius: 50%;
+    background: var(--line-bright);
+  }
+
+  .win-title {
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+  }
+
+  .win-badge {
+    color: var(--accent-emerald);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .dossier-header {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    padding: 1.15rem 1.35rem;
+    border-block-end: 1px solid var(--line);
+    background: rgb(var(--signal-rgb) / 0.04);
+  }
+
+  .portrait-wrap {
+    position: relative;
+    flex: none;
+  }
+
+  .dossier-portrait {
+    display: block;
+    inline-size: 4.25rem;
+    block-size: 4.25rem;
+    border-radius: 0.85rem;
+    object-fit: cover;
+    border: 1px solid rgb(var(--signal-rgb) / 0.45);
+  }
+
+  .portrait-status-dot {
+    position: absolute;
+    inset-block-end: -0.15rem;
+    inset-inline-end: -0.15rem;
+    inline-size: 0.8rem;
+    block-size: 0.8rem;
+    border-radius: 50%;
+    background: var(--accent-emerald);
+    border: 2px solid var(--surface);
+    box-shadow: 0 0 0.45rem var(--accent-emerald);
+  }
+
+  .dossier-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-inline-size: 0;
+  }
+
+  .dossier-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--signal);
+  }
+
+  .dossier-role {
+    color: var(--ink);
+    font-family: var(--display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+  }
+
+  .dossier-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-block-start: 0.3rem;
+  }
+
+  .dossier-badge,
+  .dossier-chip {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 0.4rem;
+    letter-spacing: 0.03em;
+  }
+
+  .dossier-badge {
+    background: rgb(var(--signal-rgb) / 0.15);
+    border: 1px solid rgb(var(--signal-rgb) / 0.45);
+    color: var(--signal-hover);
+    font-weight: 600;
+  }
+
+  .dossier-chip {
+    background: rgb(var(--canvas-rgb) / 0.65);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+
+  .dossier-canvas-wrap {
+    flex: 1;
+    display: flex;
+  }
+
+  .dossier-canvas-wrap :global(.system-map-container) {
+    border: 0;
+    border-radius: 0;
+    min-block-size: 21rem;
+    background:
+      radial-gradient(circle at 50% 50%, rgb(var(--signal-rgb) / 0.1), transparent 65%),
+      linear-gradient(to right, rgb(var(--ink-rgb) / 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--ink-rgb) / 0.025) 1px, transparent 1px),
+      rgb(var(--canvas-rgb) / 0.65);
+    background-size: 100% 100%, 1.75rem 1.75rem, 1.75rem 1.75rem, 100% 100%;
+  }
+
+  .dossier-hud-footer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-block-start: 1px solid var(--line);
+    background: rgb(var(--canvas-rgb) / 0.6);
+    font-family: var(--mono);
+  }
+
+  .hud-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    padding: 0.65rem 1rem;
+    border-inline-end: 1px solid var(--line);
+  }
+
+  .hud-cell:last-child {
+    border-inline-end: 0;
+  }
+
+  .hud-k {
+    font-size: 0.64rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+  }
+
+  .hud-v {
+    font-size: 0.76rem;
+    color: var(--signal-hover);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .button-terminal {
+    background: rgb(var(--surface-raised-rgb) / 0.75);
+    box-shadow: inset 0 1px 0 var(--border-inset);
+    border-color: var(--line-bright);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 0.76rem;
+  }
+
+  .button-terminal:hover {
+    background: rgb(var(--signal-rgb) / 0.14);
+    border-color: var(--signal);
+    color: var(--signal-hover);
+  }
+
+  .terminal-icon {
+    font-weight: 700;
+    color: var(--signal);
+  }
+
+  @media (max-width: 44rem) {
+    .dossier-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .dossier-hud-footer {
+      grid-template-columns: 1fr;
+    }
+
+    .hud-cell {
+      border-inline-end: 0;
+      border-block-end: 1px solid var(--line);
+    }
+  }
+</style>

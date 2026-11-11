@@ -1,0 +1,187 @@
+---
+import { formatDate, isoDate, readingMinutes, type BlogPost } from "../lib/blog";
+
+interface Props {
+  post: BlogPost;
+  headingLevel?: "h2" | "h3";
+}
+
+const { post, headingLevel = "h3" } = Astro.props;
+const Heading = headingLevel;
+const minutes = readingMinutes(post.body);
+---
+
+<li class="post-row" data-tags={post.data.tags.join(",")}>
+  <a class="post-card bento-card" href={`/blog/${post.id}/`}>
+    <div class="post-card-top">
+      <time class="post-date" datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate)}</time>
+      <span class="post-meta">{minutes} daqiqa o‘qish</span>
+    </div>
+
+    <div class="post-body">
+      <Heading class="post-title">{post.data.title}</Heading>
+      <p class="post-description">{post.data.description}</p>
+    </div>
+
+    <div class="post-card-bottom">
+      <ul class="post-tags" aria-label="Teglar">
+        {post.data.tags.map((tag) => <li>{tag}</li>)}
+      </ul>
+      <span class="post-arrow" aria-hidden="true">→</span>
+    </div>
+  </a>
+</li>
+
+<style>
+  .post-row {
+    list-style: none;
+  }
+
+  .post-row[hidden] {
+    display: none;
+  }
+
+  .post-card {
+    box-sizing: border-box;
+    --mouse-x: -9999px;
+    --mouse-y: -9999px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.25rem;
+    block-size: 100%;
+    padding: 1.65rem;
+    border-radius: 1.25rem;
+    border: 1px solid var(--line);
+    background: linear-gradient(
+      180deg,
+      rgb(var(--surface-raised-rgb) / 0.62),
+      rgb(var(--surface-rgb) / 0.88)
+    );
+    box-shadow:
+      inset 0 1px 0 var(--border-inset),
+      0 1rem 2.25rem -1rem rgb(var(--shadow-rgb) / 0.45);
+    transition: border-color 180ms ease, transform 180ms ease;
+  }
+
+  .post-card::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: radial-gradient(
+      400px circle at var(--mouse-x) var(--mouse-y),
+      rgb(var(--signal-rgb) / 0.12),
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 250ms ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .post-card:hover::before {
+    opacity: 1;
+  }
+
+  .post-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .post-card:hover {
+    border-color: rgb(var(--signal-rgb) / 0.45);
+    transform: translateY(-0.18rem);
+  }
+
+  .post-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .post-date,
+  .post-meta {
+    color: var(--ink-faint);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+
+  .post-meta {
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--line-bright);
+    background: rgb(var(--canvas-rgb) / 0.55);
+    color: var(--signal-hover);
+  }
+
+  .post-title {
+    margin: 0 0 0.65rem;
+    color: var(--ink);
+    font-family: var(--display);
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.22;
+  }
+
+  .post-description {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .post-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block-start: 0.75rem;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-tags li {
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--line-bright);
+    border-radius: 0.4rem;
+    background: rgb(var(--canvas-rgb) / 0.55);
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    list-style: none;
+  }
+
+  .post-arrow {
+    flex: none;
+    display: grid;
+    place-items: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border: 1px solid var(--line-bright);
+    border-radius: 0.65rem;
+    background: rgb(var(--surface-raised-rgb) / 0.75);
+    color: var(--signal);
+    transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+  }
+
+  .post-card:hover .post-arrow {
+    background: var(--signal-dim);
+    border-color: var(--signal);
+    color: var(--on-accent);
+    transform: translateX(0.15rem);
+  }
+</style>
