@@ -36,9 +36,7 @@ const { projects, archiveProjects, workHeading } = defaultContent;
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <span class="live-dot" aria-hidden="true"></span>
                   {domain}
-                  <HugeIcon icon={ArrowUpRight01Icon} size={13} anim="arrow-up-right" />
                 </a>
               </div>
 
@@ -141,11 +139,7 @@ const { projects, archiveProjects, workHeading } = defaultContent;
             >
               <div class="archive-card-top">
                 <span class="archive-mark">{item.mark}</span>
-                <span class="archive-domain">
-                  <span class="live-dot" aria-hidden="true"></span>
-                  {domain}
-                  <HugeIcon icon={ArrowUpRight01Icon} size={13} anim="arrow-up-right" />
-                </span>
+                <span class="archive-domain">{domain}</span>
               </div>
               <div class="archive-card-body">
                 <h4>{item.name}</h4>
@@ -184,9 +178,7 @@ const { projects, archiveProjects, workHeading } = defaultContent;
       rgb(var(--surface-raised-rgb) / 0.65),
       rgb(var(--surface-rgb) / 0.9)
     );
-    box-shadow:
-      inset 0 1px 0 var(--border-inset),
-      0 1.25rem 3rem -1.25rem rgb(var(--shadow-rgb) / 0.5);
+    box-shadow: inset 0 1px 0 var(--border-inset);
     transition: border-color 200ms ease, transform 200ms ease;
   }
 
@@ -352,12 +344,7 @@ const { projects, archiveProjects, workHeading } = defaultContent;
     padding: 1.35rem;
     border-radius: 1rem;
     border: 1px solid var(--line-bright);
-    background:
-      radial-gradient(24rem 14rem at 100% 0%, rgb(var(--signal-rgb) / 0.12), transparent 70%),
-      linear-gradient(to right, rgb(var(--ink-rgb) / 0.025) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(var(--ink-rgb) / 0.025) 1px, transparent 1px),
-      rgb(var(--canvas-rgb) / 0.75);
-    background-size: 100% 100%, 1.5rem 1.5rem, 1.5rem 1.5rem, 100% 100%;
+    background: rgb(var(--canvas-rgb) / 0.78);
     box-shadow: inset 0 1px 0 var(--border-inset);
   }
 
@@ -523,9 +510,7 @@ const { projects, archiveProjects, workHeading } = defaultContent;
       rgb(var(--surface-raised-rgb) / 0.6),
       rgb(var(--surface-rgb) / 0.85)
     );
-    box-shadow:
-      inset 0 1px 0 var(--border-inset),
-      0 1rem 2rem -1rem rgb(var(--shadow-rgb) / 0.45);
+    box-shadow: inset 0 1px 0 var(--border-inset);
     transition: border-color 180ms ease, transform 180ms ease;
   }
 

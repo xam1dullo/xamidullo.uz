@@ -95,20 +95,14 @@
     transition: background-color 200ms ease, color 200ms ease;
   }
 
-  /* Architectural Grid + Ambient Top Glow (Linear / Raycast style) */
+  /* Subtle Top Ambient Illumination (Matte Canvas, Zero Stock Grid) */
   body::before {
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
     content: "";
-    background-image:
-      radial-gradient(64rem 34rem at 50% -8rem, rgb(var(--signal-rgb) / 0.16), transparent 70%),
-      radial-gradient(42rem 26rem at 82% 8rem, rgb(var(--accent-violet-rgb) / 0.1), transparent 72%),
-      linear-gradient(to right, rgb(var(--ink-rgb) / 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(var(--ink-rgb) / 0.03) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 3.5rem 3.5rem, 3.5rem 3.5rem;
-    mask-image: radial-gradient(ellipse 95% 75% at 50% 15%, #000 35%, transparent 100%);
+    background-image: radial-gradient(56rem 28rem at 50% -10rem, rgb(var(--signal-rgb) / 0.13), transparent 72%);
   }
 
   h1,
@@ -398,6 +392,15 @@
     transform: translateY(-0.12rem);
   }
 
+  .button-magnetic {
+    will-change: transform;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .button-magnetic:hover {
+    transform: none;
+  }
+
   .button-primary {
     border-color: rgb(var(--signal-rgb) / 0.5);
     background: linear-gradient(180deg, var(--signal) 0%, var(--signal-dim) 100%);
@@ -543,9 +546,7 @@
     border-radius: 1.15rem;
     border: 1px solid var(--line);
     background: linear-gradient(180deg, rgb(var(--surface-raised-rgb) / 0.65), rgb(var(--surface-rgb) / 0.85));
-    box-shadow:
-      inset 0 1px 0 var(--border-inset),
-      0 1rem 2rem -1rem rgb(var(--shadow-rgb) / 0.4);
+    box-shadow: inset 0 1px 0 var(--border-inset);
     transition: border-color 180ms ease, transform 180ms ease;
   }
 
@@ -613,9 +614,7 @@
     border-radius: 1.2rem;
     border: 1px solid var(--line);
     background: linear-gradient(180deg, rgb(var(--surface-raised-rgb) / 0.6), rgb(var(--surface-rgb) / 0.85));
-    box-shadow:
-      inset 0 1px 0 var(--border-inset),
-      0 1rem 2rem -1rem rgb(var(--shadow-rgb) / 0.4);
+    box-shadow: inset 0 1px 0 var(--border-inset);
     transition: border-color 180ms ease, transform 180ms ease;
   }
 
@@ -726,12 +725,47 @@
   }
 
   .timeline {
+    --timeline-progress: 0;
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     padding: 0;
     margin: 0;
     list-style: none;
+    padding-inline-start: 1.35rem;
+  }
+
+  .timeline::before,
+  .timeline::after {
+    position: absolute;
+    inset-block: 1.5rem;
+    inset-inline-start: 0;
+    inline-size: 2px;
+    border-radius: 999px;
+    content: "";
+  }
+
+  .timeline::before {
+    background: var(--line);
+  }
+
+  .timeline::after {
+    background: linear-gradient(180deg, var(--signal), var(--accent-violet));
+    transform-origin: top center;
+    transform: scaleY(var(--timeline-progress));
+    box-shadow: 0 0 0.75rem rgb(var(--signal-rgb) / 0.45);
+  }
+
+  .scroll-progress-bar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 60;
+    block-size: 2px;
+    background: linear-gradient(90deg, var(--signal), var(--accent-violet), var(--accent-emerald));
+    transform-origin: left center;
+    transform: scaleX(0);
+    pointer-events: none;
   }
 
   .timeline li {
@@ -798,9 +832,7 @@
     border-radius: 1.35rem;
     background: linear-gradient(180deg, rgb(var(--surface-raised-rgb) / 0.6), rgb(var(--surface-rgb) / 0.85));
     border: 1px solid var(--line);
-    box-shadow:
-      inset 0 1px 0 var(--border-inset),
-      0 1.25rem 2.5rem -1.25rem rgb(var(--shadow-rgb) / 0.45);
+    box-shadow: inset 0 1px 0 var(--border-inset);
   }
 
   .knowledge h2 {
@@ -881,21 +913,6 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .hero-copy {
-      animation: enter 550ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
-    }
-
-    @keyframes enter {
-      from {
-        opacity: 0;
-        transform: translateY(1rem);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
     /* ======================================================================
        HUGEICONS MULTI-PATH MICRO-ANIMATION ENGINE
        Animates individual SVG sub-paths (.hi-part-0, .hi-part-1, .hi-part-2)
